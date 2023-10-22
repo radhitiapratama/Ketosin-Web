@@ -1,0 +1,128 @@
+@font-face {
+    font-family: "Poppins";
+    src: url("../../fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Poppins-italic";
+    src: url("../../fonts/Poppins-Italic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins-bold";
+    src: url("../../fonts/Poppins-Bold.ttf");
+}
+
+:root {
+    --default: #F6F4FB;
+    --primary: #8FBD56;
+    --secondary: #E984B1;
+    --success: #13BFA6;
+    --info: #59ADEC;
+    --warning: #E7C354;
+    --danger: #D12C47;
+    --dark: #343A40;
+    --light: #EAECF0;
+    --white: #FFF;
+}
+
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+.border-bottom-none {
+    border-bottom: none !important;
+}
+
+.border-top-none {
+    border-top: none !important;
+}
+
+.border-y-none {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.form-control:focus {
+    border: 1px solid var(--primary) !important;
+}
+
+.btn-primary {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background-color: var(--primary) !important;
+    color: var(--white) !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    width: max-content;
+}
+
+.btn-warning {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background-color: var(--warning) !important;
+    color: var(--white) !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    width: max-content;
+}
+
+
+.badge-success {
+    background-color: var(--success);
+    color: var(--white);
+}
+
+.badge-danger {
+    background-color: var(--danger);
+    color: var(--white);
+}
+
+.badge-warning,
+.badge-warning:hover {
+    background-color: var(--warning) !important;
+    color: var(--white) !important;
+}
+
+.page-item.active .page-link {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted,
+.select2-container--bootstrap4 .select2-results__option--highlighted.select2-results__option[aria-selected="true"] {
+    background: var(--primary) !important;
+}
+
+.select2-container--bootstrap4.select2-container--focus .select2-selection {
+    border: 1px solid var(--primary) !important;
+    box-shadow: none !important;
+}
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
+.sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+    background: var(--primary);
+}
+
+.card-primary:not(.card-outline)>.card-header {
+    background: var(--primary);
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-warning {
+    color: var(--warning) !important;
+}
+
+.text-info {
+    color: var(--info) !important;
+}

@@ -77,7 +77,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="/qr-code/cetak-qr" method="POST" class="mb-3">
+                    <form action="/qr-code/cetak-qr" method="POST" class="mb-3" target="_blank">
                         @csrf
                         <div class="form-group">
                             <label for="#">Tipe</label>

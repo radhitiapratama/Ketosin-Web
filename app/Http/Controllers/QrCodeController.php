@@ -120,6 +120,7 @@ class QrCodeController extends Controller
                 ->where("tingkatan", $tingkatan)
                 ->where("id_kelas", $kelas)
                 ->where("status", 1)
+                ->where("qr_code", '!=', null)
                 ->orderBy('id_peserta', 'ASC')
                 ->get();
 

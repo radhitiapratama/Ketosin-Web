@@ -10,6 +10,8 @@
 @section('content')
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 
 
     <div class="card">
@@ -25,6 +27,24 @@
                         Download Template
                         <i class="ri-download-line"></i>
                     </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="#">Status</label>
+                        <select name="filterStatus" id="filterStatus" class="form-control">
+                            <option value="">Pilih Status...</option>
+                            @foreach ($statuses as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,7 +129,7 @@
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
 
     <script>
         @if (session()->has('success_import'))
@@ -129,12 +149,76 @@
     </script>
 
     <script>
+        const configSelect2 = {
+            theme: 'bootstrap4',
+            width: "100%"
+        }
+
+        const csrf = $('meta[name="csrf-token"]').attr('content');
+
         function showDatatable() {
             $("#tblKelas").DataTable({
-                ordering: false,
+                columnDefs: [{
+                    targets: [0, 3],
+                    orderable: false,
+                }]
             });
         }
 
         showDatatable();
+
+        $("#filterStatus").select2(configSelect2);
+
+        $("#filterStatus").change(function() {
+            let value = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': csrf,
+                },
+                url: "{{ url('kelas') }}",
+                data: {
+                    status: value,
+                },
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+
+                    let kelas = response.kelases;
+                    let html = ``;
+                    let no = 1;
+
+                    for (let i = 0; i < kelas.length; i++) {
+                        let status = ``;
+
+                        if (kelas[i].status == 1) {
+                            status = `<span class="badge badge-success p-2">Aktif</span>`;
+                        }
+
+                        if (kelas[i].status == 0) {
+                            status = `<span class="badge badge-danger p-2">Nonaktif</span>`;
+                        }
+
+                        html += `
+                        <tr>
+                            <td>${no}</td>
+                            <td>${kelas[i].nama_kelas}</td>
+                            <td class="text-center">
+                              ${status}
+                            </td>
+                            <td class="text-center">
+                                <a href="kelas/edit/${kelas[i].id_kelas}" class="badge badge-warning p-2"><i
+                                        class="ri-pencil-line"></i></a>
+                            </td>
+                        </tr>
+                        `;
+                        no++;
+                    }
+
+                    $("#tblKelas tbody").html(html);
+                }
+            });
+        });
     </script>
 @endsection

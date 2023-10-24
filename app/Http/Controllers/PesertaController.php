@@ -30,15 +30,56 @@ class PesertaController extends Controller
         '0' => "Nonaktif",
     ];
 
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $tipe = $request->tipe;
+            $tingkatan = $request->tingkatan;
+            $kelas = $request->kelas;
+            $status = $request->status;
+
+            $sql_peserta = DB::table("peserta as p")
+                ->select('p.*', 'k.nama_kelas')
+                ->join('kelas as k', 'k.id_kelas', '=', 'p.id_kelas');
+
+            if ($tipe != null) {
+                $sql_peserta->where("p.tipe", $tipe);
+            }
+
+            if ($tingkatan != null) {
+                $sql_peserta->where("p.tingkatan", $tingkatan);
+            }
+
+            if ($kelas != null) {
+                $sql_peserta->where("p.id_kelas", $kelas);
+            }
+
+            if ($status != null) {
+                $sql_peserta->where("p.status", $status);
+            }
+
+            return response()->json(
+                [
+                    'status' => true,
+                    'pesertas' => $sql_peserta->get(),
+                ]
+            );
+        }
+
         $sql_peserta = DB::table("peserta as p")
             ->join('kelas as k', 'k.id_kelas', '=', 'p.id_kelas')
             ->where("k.status", 1)
             ->select('p.*', 'k.nama_kelas')
             ->get();
 
+        $sql_kelas = Kelas::where("status", 1)
+            ->get();
+
         $dataToView = [
+            'tipeses' => $this->tipeses,
+            'tingkatans' => $this->tingkatans,
+            'kelases' => $sql_kelas,
+            'statuses' => $this->statuses,
             'pesertas' => $sql_peserta,
         ];
 

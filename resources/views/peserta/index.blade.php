@@ -10,6 +10,8 @@
 @section('content')
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 
     <div class="card">
         <div class="card-body d-flex flex-wrap gap-20">
@@ -21,6 +23,57 @@
                 Download Template
                 <i class="ri-download-line"></i>
             </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="#">Tipe</label>
+                        <select name="filterTipe" id="filterTipe" class="form-control">
+                            <option value="">Pilih Tipe...</option>
+                            @foreach ($tipeses as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="#">Tingkatan</label>
+                        <select name="filterTingkatan" id="filterTingkatan" class="form-control">
+                            <option value="">Pilih Tingkatan...</option>
+                            @foreach ($tingkatans as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="#">Kelas</label>
+                        <select name="filterKelas" id="filterKelas" class="form-control">
+                            <option value="">Pilih Kelas...</option>
+                            @foreach ($kelases as $kelas)
+                                <option value="{{ $kelas->id_kelas }}">{{ $kelas->nama_kelas }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="#">Status</label>
+                        <select name="filterStatus" id="filterStatus" class="form-control">
+                            <option value="">Pilih Status...</option>
+                            @foreach ($statuses as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -110,8 +163,8 @@
                             <label for="exampleInputFile">File Excel</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" name="file_excel" class="custom-file-input" id="exampleInputFile"
-                                        accept=".xlsx">
+                                    <input type="file" name="file_excel" class="custom-file-input"
+                                        id="exampleInputFile" accept=".xlsx">
                                     <label class="custom-file-label" for="exampleInputFile">Pilih File</label>
                                 </div>
                                 <div class="input-group-append">
@@ -138,6 +191,8 @@
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
+
 
     <script>
         @if (session()->has('success_import'))
@@ -157,6 +212,13 @@
     </script>
 
     <script>
+        const configSelect2 = {
+            theme: 'bootstrap4',
+            width: "100%"
+        }
+
+        const csrf = $('meta[name="csrf-token"]').attr('content');
+
         bsCustomFileInput.init();
 
         function showDataTable() {
@@ -169,5 +231,133 @@
         }
 
         showDataTable();
+
+        $("#filterTipe").select2(configSelect2);
+        $("#filterTingkatan").select2(configSelect2);
+        $("#filterKelas").select2(configSelect2);
+        $("#filterStatus").select2(configSelect2);
+
+        $("#filterTipe").change(function() {
+            filterTable();
+        });
+
+        $("#filterTingkatan").change(function() {
+            filterTable();
+        })
+
+        $("#filterKelas").change(function() {
+            filterTable();
+        });
+
+        $("#filterStatus").change(function() {
+            filterTable();
+        })
+
+        function filterTable() {
+            let filterTipe = $("#filterTipe").val();
+            let filterTingkatan = $("#filterTingkatan").val();
+            let filterKelas = $("#filterKelas").val();
+            let filterStatus = $("#filterStatus").val();
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': csrf
+                },
+                url: "{{ url('peserta') }}",
+                data: {
+                    tipe: filterTipe,
+                    tingkatan: filterTingkatan,
+                    kelas: filterKelas,
+                    status: filterStatus,
+                },
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+
+                    const peserta = response.pesertas;
+                    let html = ``;
+                    let num = 1;
+
+                    for (let i = 0; i < peserta.length; i++) {
+                        const tipe = checkTipe(peserta[i].tipe)
+                        const tingkatan = checkTingkatan(peserta[i].tingkatan);
+                        const status = checkStatus(peserta[i].status);
+                        const qrCode = checkQr(peserta[i].qr_code);
+
+                        html += `
+                        <tr>
+                            <td>${num}</td>
+                            <td>${peserta[i].nama_peserta}</td>
+                            <td>
+                               ${tipe} 
+                            </td>
+                            <td>
+                               ${tingkatan} ${peserta[i].nama_kelas}
+                            </td>
+                            <td>
+                               ${qrCode}
+                            </td>
+                            <td class="text-center">
+                               ${status}
+                            </td>
+                            <td class="text-center">
+                                <a href="/peserta/edit/${peserta[i].id_peserta}" class="badge badge-warning p-2">
+                                    <i class="ri-pencil-line"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        `;
+                        num++;
+                    }
+
+                    $("#tblPeserta tbody").html(html);
+                }
+            });
+        }
+
+        function checkTipe(tipe) {
+            if (tipe == 1) {
+                return "Siswa";
+            }
+
+            if (tipe == 2) {
+                return "Guru";
+            }
+
+            if (tipe == 3) {
+                return "Karyawan";
+            }
+        }
+
+        function checkTingkatan(tingkatan) {
+            if (tingkatan == 1) {
+                return "X";
+            }
+
+            if (tingkatan == 2) {
+                return "XI";
+            }
+
+            if (tingkatan == 3) {
+                return "XII";
+            }
+        }
+
+        function checkStatus(status) {
+            if (status == 1) {
+                return `<span class="badge badge-success p-2">Aktif</span>`;
+            } else {
+                return `<span class="badge badge-danger p-2">Nonaktif</span>`;
+            }
+        }
+
+        function checkQr(qrCode) {
+            if (qrCode) {
+                return qrCode;
+            } else {
+                return "-";
+            }
+        }
     </script>
 @endsection

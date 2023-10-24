@@ -32,14 +32,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get("logout", [AuthController::class, 'logout']);
 
     Route::get("dashboard", [DashboardController::class, 'index']);
-    Route::get("kelas", [KelasController::class, 'index']);
+    Route::match(['get', 'post'], "kelas", [KelasController::class, 'index']);
     Route::get("kelas/add", [KelasController::class, 'add']);
     Route::post("kelas/store", [KelasController::class, 'store']);
     Route::get("kelas/edit/{id_kelas}", [KelasController::class, 'edit']);
     Route::post("kelas/update", [KelasController::class, 'update']);
     Route::post("kelas/import", [KelasController::class, 'import']);
 
-    Route::get("peserta", [PesertaController::class, 'index']);
+    Route::match(['get', 'post'], "peserta", [PesertaController::class, 'index']);
     Route::get("peserta/add", [PesertaController::class, 'add']);
     Route::post("peserta/store", [PesertaController::class, 'store']);
     Route::get("peserta/edit/{id_peserta}", [PesertaController::class, 'edit']);
@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get("kandidat/edit/{id_kandidat}", [KandidatController::class, 'edit']);
     Route::post("kandidat/update", [KandidatController::class, 'update']);
 
-    Route::get("pemilihan", [PemilihanController::class, 'index']);
+    Route::match(['get', 'post'], "pemilihan", [PemilihanController::class, 'index']);
 
     Route::get("qr-code", [QrCodeController::class, 'index']);
     Route::post("qr-code/store", [QrCodeController::class, 'store']);

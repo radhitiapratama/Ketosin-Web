@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\KelasImport;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -107,5 +108,14 @@ class KelasController extends Controller
         }
 
         return redirect("kelas");
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file("file_excel");
+        $kelasImport = new KelasImport;
+        $kelasImport->import($file);
+
+        return redirect()->back()->with("success_import", "success_import");
     }
 }

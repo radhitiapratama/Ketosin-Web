@@ -32,10 +32,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/print-qr" class="nav-link {{ Request::is('print-qr', 'print-qr/*') ? 'active' : '' }}">
+                    <a href="/qr-code" class="nav-link {{ Request::is('qr-code', 'qr-code/*') ? 'active' : '' }}">
                         <i class="nav-icon ri-qr-code-line"></i>
                         <p>
-                            Print QR Code
+                            QR Code
                         </p>
                     </a>
                 </li>

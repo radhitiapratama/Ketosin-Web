@@ -9,13 +9,22 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
+
 
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-12 d-flex">
+                <div class="col-12 d-flex gap-20">
                     <a href="/kelas/add" class="btn btn-primary">
                         Tambah Kelas <i class="ri-add-line ml-2"></i></a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imporKelas">
+                        Import Kelas <i class="ri-file-excel-2-line"></i>
+                    </button>
+                    <a href="{{ asset('excel/importKelas.xlsx') }}" class="btn btn-primary" download>
+                        Download Template
+                        <i class="ri-download-line"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -55,8 +64,69 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="imporKelas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Import Kelas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/kelas/import" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="exampleInputFile">File Excel</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="file_excel" class="custom-file-input" id="exampleInputFile"
+                                        accept=".xlsx">
+                                    <label class="custom-file-label" for="exampleInputFile">Pilih File</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Upload</span>
+                                </div>
+                            </div>
+                            <small class="text-danger">
+                                Extensi file wajib .xlsx
+                            </small>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-center gap-20">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Import</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+
+    <script>
+        @if (session()->has('success_import'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Data kelas berhasil di import',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+    </script>
 
     <script>
         function showDatatable() {

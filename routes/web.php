@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KandidatController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\PemilihanController;
 use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\WaktuController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,12 +37,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post("kelas/store", [KelasController::class, 'store']);
     Route::get("kelas/edit/{id_kelas}", [KelasController::class, 'edit']);
     Route::post("kelas/update", [KelasController::class, 'update']);
+    Route::post("kelas/import", [KelasController::class, 'import']);
 
     Route::get("peserta", [PesertaController::class, 'index']);
     Route::get("peserta/add", [PesertaController::class, 'add']);
     Route::post("peserta/store", [PesertaController::class, 'store']);
     Route::get("peserta/edit/{id_peserta}", [PesertaController::class, 'edit']);
     Route::post("peserta/update", [PesertaController::class, 'update']);
+    Route::post("peserta/import", [PesertaController::class, 'import']);
 
     Route::get("batas-waktu", [WaktuController::class, 'index']);
     Route::get("batas-waktu/add", [WaktuController::class, 'add']);
@@ -53,4 +57,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post("kandidat/store", [KandidatController::class, 'store']);
     Route::get("kandidat/edit/{id_kandidat}", [KandidatController::class, 'edit']);
     Route::post("kandidat/update", [KandidatController::class, 'update']);
+
+    Route::get("pemilihan", [PemilihanController::class, 'index']);
+
+    Route::get("qr-code", [QrCodeController::class, 'index']);
+    Route::post("qr-code/store", [QrCodeController::class, 'store']);
+
+    Route::post("qr-code/cetak-qr", [QrCodeController::class, 'cetak']);
 });

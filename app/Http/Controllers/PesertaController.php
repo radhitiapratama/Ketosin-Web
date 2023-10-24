@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\PesertaImport;
 use App\Models\Kelas;
 use App\Models\Peserta;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PesertaController extends Controller
 {
@@ -163,5 +165,15 @@ class PesertaController extends Controller
         }
 
         return redirect("/peserta")->with("successUpdate", "successUpdate");
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file("file_excel");
+
+        $importPeserta = new PesertaImport;
+        $importPeserta->import($file);
+
+        return redirect()->back()->with("success_import", "success_import");
     }
 }

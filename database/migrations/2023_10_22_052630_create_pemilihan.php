@@ -14,14 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('pemilihan', function (Blueprint $table) {
-            $table->id("pemilihan_id");
+            $table->id("id_pemilihan");
             $table->foreignId("id_peserta")->references("id_peserta")->on("peserta");
             $table->foreignId("id_kandidat")->references("id_kandidat")->on("kandidat");
             $table->timestamp("waktu");
-            $table->string("longtitude");
-            $table->string("langtitude");
-            $table->string("mac");
-            $table->integer("status");
+            $table->string("longtitude")->nullable();
+            $table->string("latitude")->nullable();
+            $table->string("mac")->nullable();
+            $table->integer("status")->default(1);
             $table->timestamps();
         });
     }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text("visi");
             $table->text("misi");
             $table->text("slogan");
-            $table->string("foto");
+            $table->string("foto")->nullable();
             $table->timestamps();
         });
     }

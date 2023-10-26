@@ -86,7 +86,6 @@
                         <th class="border-y-none">Nama Peserta</th>
                         <th class="border-y-none">Tipe</th>
                         <th class="border-y-none">Kelas</th>
-                        <th class="border-y-none">QR Code</th>
                         <th class="text-center border-y-none">Status</th>
                         <th class="text-center border-y-none">Action</th>
                     </tr>
@@ -119,13 +118,6 @@
                                 @endif
                                 {{ $peserta->nama_kelas }}
                             </td>
-                            <td>
-                                @if ($peserta->qr_code)
-                                    {{ $peserta->qr_code }}
-                                @else
-                                    -
-                                @endif
-                            </td>
                             <td class="text-center">
                                 @if ($peserta->status == 1)
                                     <span class="badge badge-success p-2">Aktif</span>
@@ -133,10 +125,16 @@
                                     <span class="badge badge-danger p-2">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="text-center">
-                                <a href="/peserta/edit/{{ $peserta->id_peserta }}" class="badge badge-warning p-2">
-                                    <i class="ri-pencil-line"></i>
-                                </a>
+                            <td>
+                                <div class="d-flex justify-content-center gap-20">
+                                    <button type="button" class="badge badge-primary p-2 btn-detail-qr"
+                                        data-qr-value="{{ $peserta->qr_code }}" data-toggle="modal" data-target="#modalQr">
+                                        <i class="ri-qr-code-line"></i>
+                                    </button>
+                                    <a href="/peserta/edit/{{ $peserta->id_peserta }}" class="badge badge-warning p-2">
+                                        <i class="ri-pencil-line"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -187,12 +185,30 @@
         </div>
     </div>
 
+
+    <!-- Modal Detail Barcode -->
+    <div class="modal fade" id="modalQr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detail QR Code</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-qr-code"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
-
+    <script src="{{ asset('plugins/qr-code/qrcode.min.js') }}"></script>
 
     <script>
         @if (session()->has('success_import'))
@@ -222,12 +238,16 @@
         bsCustomFileInput.init();
 
         function showDataTable() {
-            $("#tblPeserta").DataTable();
+            $("#tblPeserta").DataTable({
+                columnDefs: [{
+                    targets: [2, 4, 5],
+                    orderable: false,
+                }]
+            });
         }
 
         function destoryDataTable() {
             $("#tblPeserta").DataTable().clear().destroy();
-            $("#tblPeserta").DataTable();
         }
 
         showDataTable();
@@ -253,11 +273,22 @@
             filterTable();
         })
 
+        $(".btn-detail-qr").click(function() {
+            let qrValue = $(this).data("qr-value");
+            console.log(qrValue);
+            $(".modal-qr-code").html(``);
+            const qrEl = new QRCode(document.querySelector("#modalQr .modal-qr-code"), qrValue);
+            $(".modal-qr-value").html(qrEl);
+        });
+
+
         function filterTable() {
             let filterTipe = $("#filterTipe").val();
             let filterTingkatan = $("#filterTingkatan").val();
             let filterKelas = $("#filterKelas").val();
             let filterStatus = $("#filterStatus").val();
+
+            destoryDataTable();
 
             $.ajax({
                 type: "POST",
@@ -283,7 +314,6 @@
                         const tipe = checkTipe(peserta[i].tipe)
                         const tingkatan = checkTingkatan(peserta[i].tingkatan);
                         const status = checkStatus(peserta[i].status);
-                        const qrCode = checkQr(peserta[i].qr_code);
 
                         html += `
                         <tr>
@@ -294,9 +324,6 @@
                             </td>
                             <td>
                                ${tingkatan} ${peserta[i].nama_kelas}
-                            </td>
-                            <td>
-                               ${qrCode}
                             </td>
                             <td class="text-center">
                                ${status}
@@ -312,6 +339,8 @@
                     }
 
                     $("#tblPeserta tbody").html(html);
+
+                    showDataTable();
                 }
             });
         }
@@ -349,14 +378,6 @@
                 return `<span class="badge badge-success p-2">Aktif</span>`;
             } else {
                 return `<span class="badge badge-danger p-2">Nonaktif</span>`;
-            }
-        }
-
-        function checkQr(qrCode) {
-            if (qrCode) {
-                return qrCode;
-            } else {
-                return "-";
             }
         }
     </script>

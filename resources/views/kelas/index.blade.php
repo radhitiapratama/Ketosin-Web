@@ -156,6 +156,8 @@
 
         const csrf = $('meta[name="csrf-token"]').attr('content');
 
+        bsCustomFileInput.init();
+
         function showDatatable() {
             $("#tblKelas").DataTable({
                 columnDefs: [{

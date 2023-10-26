@@ -153,3 +153,8 @@
 .text-info {
     color: var(--info) !important;
 }
+
+.page-link,
+.page-link:hover {
+    color: var(--primary);
+}

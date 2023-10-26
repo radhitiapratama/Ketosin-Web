@@ -2,8 +2,9 @@
 
 namespace App\Imports;
 
-use App\Models\Peserta;
 use Carbon\Carbon;
+use App\Models\Peserta;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -29,8 +30,7 @@ class PesertaImport implements ToCollection, WithStartRow
             $tipe = $this->checkTipe($row[1]);
 
             if ($tipe == null || $tingkatan == null) {
-                DB::rollBack();
-                return;
+                continue;
             }
 
             $sql_kelas = DB::table('kelas')
@@ -38,15 +38,16 @@ class PesertaImport implements ToCollection, WithStartRow
                 ->first();
 
             if (!$sql_kelas) {
-                DB::rollBack();
-                return;
+                continue;
             }
 
+            $nama_peserta = str_replace("'", "", $row[0]);
+
             $dataInsert[] = [
-                'nama_peserta' => $row[0],
+                'nama_peserta' =>  $nama_peserta,
                 'tipe' => $tipe,
                 'id_kelas' => $sql_kelas->id_kelas,
-                'qr_code' => null,
+                'qr_code' => Str::random(40),
                 'tingkatan' => $tingkatan,
                 'id_kelas' => $sql_kelas->id_kelas,
                 'created_at' => Carbon::now(),

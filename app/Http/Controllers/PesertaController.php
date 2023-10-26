@@ -70,6 +70,7 @@ class PesertaController extends Controller
             ->join('kelas as k', 'k.id_kelas', '=', 'p.id_kelas')
             ->where("k.status", 1)
             ->select('p.*', 'k.nama_kelas')
+            ->orderBy('p.id_peserta')
             ->get();
 
         $sql_kelas = Kelas::where("status", 1)
@@ -210,6 +211,7 @@ class PesertaController extends Controller
 
     public function import(Request $request)
     {
+
         $file = $request->file("file_excel");
 
         $importPeserta = new PesertaImport;

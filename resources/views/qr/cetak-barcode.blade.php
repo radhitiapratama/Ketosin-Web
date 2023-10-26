@@ -83,6 +83,10 @@
             </tr>
         </table>
     </div>
+
+    <script>
+        let html = ``
+    </script>
 </body>
 
 </html>

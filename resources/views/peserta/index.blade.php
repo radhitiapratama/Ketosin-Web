@@ -23,6 +23,9 @@
                 Download Template
                 <i class="ri-download-line"></i>
             </a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cetakQrCode">
+                Cetak QR Code <i class="ri-printer-line"></i>
+            </button>
         </div>
     </div>
 
@@ -33,7 +36,7 @@
                     <div class="form-group">
                         <label for="#">Tipe</label>
                         <select name="filterTipe" id="filterTipe" class="form-control">
-                            <option value="">Pilih Tipe...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($tipeses as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -44,7 +47,7 @@
                     <div class="form-group">
                         <label for="#">Tingkatan</label>
                         <select name="filterTingkatan" id="filterTingkatan" class="form-control">
-                            <option value="">Pilih Tingkatan...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($tingkatans as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -55,7 +58,7 @@
                     <div class="form-group">
                         <label for="#">Kelas</label>
                         <select name="filterKelas" id="filterKelas" class="form-control">
-                            <option value="">Pilih Kelas...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($kelases as $kelas)
                                 <option value="{{ $kelas->id_kelas }}">{{ $kelas->nama_kelas }}</option>
                             @endforeach
@@ -66,7 +69,7 @@
                     <div class="form-group">
                         <label for="#">Status</label>
                         <select name="filterStatus" id="filterStatus" class="form-control">
-                            <option value="">Pilih Status...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($statuses as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -79,7 +82,7 @@
 
     <div class="card">
         <div class="card-body table-responsive">
-            <table id="tblPeserta" class="table table-bordered">
+            <table id="tblPeserta" class="table table-bordered" style="width: 100%">
                 <thead>
                     <tr>
                         <th class="border-y-none" width="5">#</th>
@@ -91,7 +94,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($pesertas as $peserta)
+                    {{-- @foreach ($pesertas as $peserta)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $peserta->nama_peserta }}</td>
@@ -137,7 +140,7 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach --}}
 
                 </tbody>
             </table>
@@ -203,6 +206,45 @@
         </div>
     </div>
 
+    <!-- Modal Cetak QR Code -->
+    <div class="modal fade" id="cetakQrCode" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cetak QR Code</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/qr-code/cetak-qr" method="POST" class="mb-3" target="_blank">
+                        @csrf
+                        <div class="form-group">
+                            <label for="#">Tipe</label>
+                            <select name="tipe_cetak" id="tipe_cetak" class="form-control" required>
+                                <option value="">Pilih Tipe...</option>
+                                @foreach ($tipeses as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="qr-cetak-form-wrapper">
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-center gap-20">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary" id="btn-cetak-qr">Cetak</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
@@ -235,14 +277,72 @@
 
         const csrf = $('meta[name="csrf-token"]').attr('content');
 
+        const cetak_form_siswa = `
+        <div class="row">
+            <div class="col-md-6 col-12">
+                <div class="form-group">
+                    <label for="#">Tingkatan</label>
+                    <select name="cetak_tingkatan" id="cetak_tingkatan" class="form-control" required>
+                        <option value="">Pilih Tingkatan...</option>
+                        @foreach ($tingkatans as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="form-group">
+                    <label for="#">Kelas</label>
+                    <select name="cetak_kelas" id="cetak_kelas" class="form-control" required>
+                        <option value="">Pilih Kelas...</option>
+                        @foreach ($kelases as $kelas)
+                            <option value="{{ $kelas->id_kelas }}">{{ $kelas->nama_kelas }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+        `;
+
         bsCustomFileInput.init();
 
         function showDataTable() {
             $("#tblPeserta").DataTable({
-                columnDefs: [{
-                    targets: [2, 4, 5],
-                    orderable: false,
-                }]
+                serverSide: true,
+                processing: true,
+                searchDelay: 1500,
+                ordering: false,
+                ajax: {
+                    url: "{{ url('peserta') }}",
+                    data: function(data) {
+                        data.tipe = $("#filterTipe").val();
+                        data.tingkatan = $("#filterTingkatan").val();
+                        data.kelas = $("#filterKelas").val();
+                        data.status = $("#filterStatus").val();
+                    }
+                },
+                drawCallback: function(res) {
+                    console.log(res.json);
+                },
+                columns: [{
+                        data: "no"
+                    },
+                    {
+                        data: "nama_peserta"
+                    },
+                    {
+                        data: "tipe"
+                    },
+                    {
+                        data: "kelas"
+                    },
+                    {
+                        data: "status"
+                    },
+                    {
+                        data: "action"
+                    },
+                ],
             });
         }
 
@@ -250,30 +350,67 @@
             $("#tblPeserta").DataTable().clear().destroy();
         }
 
+        function show_error_validation_input() {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Gagal ! Semua input wajib di isi',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        }
+
+        function close_error_validation_input() {
+            Swal.close();
+        }
+
+        function show_loading_loader() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Loading...',
+            })
+        }
+
+        function hide_loading_loader() {
+            Swal.close();
+        }
+
+
         showDataTable();
 
         $("#filterTipe").select2(configSelect2);
         $("#filterTingkatan").select2(configSelect2);
         $("#filterKelas").select2(configSelect2);
         $("#filterStatus").select2(configSelect2);
+        $("#tipe_cetak").select2(configSelect2);
+
 
         $("#filterTipe").change(function() {
-            filterTable();
+            destoryDataTable();
+            showDataTable();
         });
 
         $("#filterTingkatan").change(function() {
-            filterTable();
+            destoryDataTable();
+            showDataTable();
         })
 
         $("#filterKelas").change(function() {
-            filterTable();
+            destoryDataTable();
+            showDataTable();
         });
 
         $("#filterStatus").change(function() {
-            filterTable();
+            destoryDataTable();
+            showDataTable();
         })
 
-        $(".btn-detail-qr").click(function() {
+        $(document).on("click", ".btn-detail-qr", function() {
             let qrValue = $(this).data("qr-value");
             console.log(qrValue);
             $(".modal-qr-code").html(``);
@@ -281,104 +418,26 @@
             $(".modal-qr-value").html(qrEl);
         });
 
+        $("#tipe_cetak").change(function() {
+            const tipe = $(this).val();
 
-        function filterTable() {
-            let filterTipe = $("#filterTipe").val();
-            let filterTingkatan = $("#filterTingkatan").val();
-            let filterKelas = $("#filterKelas").val();
-            let filterStatus = $("#filterStatus").val();
-
-            destoryDataTable();
-
-            $.ajax({
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': csrf
-                },
-                url: "{{ url('peserta') }}",
-                data: {
-                    tipe: filterTipe,
-                    tingkatan: filterTingkatan,
-                    kelas: filterKelas,
-                    status: filterStatus,
-                },
-                dataType: "json",
-                success: function(response) {
-                    console.log(response);
-
-                    const peserta = response.pesertas;
-                    let html = ``;
-                    let num = 1;
-
-                    for (let i = 0; i < peserta.length; i++) {
-                        const tipe = checkTipe(peserta[i].tipe)
-                        const tingkatan = checkTingkatan(peserta[i].tingkatan);
-                        const status = checkStatus(peserta[i].status);
-
-                        html += `
-                        <tr>
-                            <td>${num}</td>
-                            <td>${peserta[i].nama_peserta}</td>
-                            <td>
-                               ${tipe} 
-                            </td>
-                            <td>
-                               ${tingkatan} ${peserta[i].nama_kelas}
-                            </td>
-                            <td class="text-center">
-                               ${status}
-                            </td>
-                            <td class="text-center">
-                                <a href="/peserta/edit/${peserta[i].id_peserta}" class="badge badge-warning p-2">
-                                    <i class="ri-pencil-line"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        `;
-                        num++;
-                    }
-
-                    $("#tblPeserta tbody").html(html);
-
-                    showDataTable();
-                }
-            });
-        }
-
-        function checkTipe(tipe) {
             if (tipe == 1) {
-                return "Siswa";
+                $(".qr-cetak-form-wrapper").html(cetak_form_siswa);
+                $("#cetak_tingkatan").select2(configSelect2);
+                $("#cetak_kelas").select2(configSelect2);
+                return;
             }
 
             if (tipe == 2) {
-                return "Guru";
+                $(".qr-cetak-form-wrapper").html("");
+                return;
             }
 
             if (tipe == 3) {
-                return "Karyawan";
-            }
-        }
-
-        function checkTingkatan(tingkatan) {
-            if (tingkatan == 1) {
-                return "X";
+                $(".qr-cetak-form-wrapper").html("");
+                return;
             }
 
-            if (tingkatan == 2) {
-                return "XI";
-            }
-
-            if (tingkatan == 3) {
-                return "XII";
-            }
-        }
-
-        function checkStatus(status) {
-            if (status == 1) {
-                return `<span class="badge badge-success p-2">Aktif</span>`;
-            } else {
-                return `<span class="badge badge-danger p-2">Nonaktif</span>`;
-            }
-        }
+        });
     </script>
 @endsection

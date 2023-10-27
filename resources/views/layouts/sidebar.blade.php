@@ -11,10 +11,10 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('main-assets/imgs/default.jpg') }}" class=" elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block">{{ ucfirst(Auth::user()->name) }}</a>
             </div>
         </div>
 
@@ -31,14 +31,14 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="/qr-code" class="nav-link {{ Request::is('qr-code', 'qr-code/*') ? 'active' : '' }}">
                         <i class="nav-icon ri-qr-code-line"></i>
                         <p>
                             QR Code
                         </p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-header">Voting</li>
                 <li class="nav-item">
                     <a href="/kandidat" class="nav-link {{ Request::is('kandidat', 'kandidat/*') ? 'active' : '' }}">

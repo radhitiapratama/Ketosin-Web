@@ -19,7 +19,7 @@
                     <div class="form-group">
                         <label for="#">Tipe</label>
                         <select name="filterTipe" id="filterTipe" class="form-control">
-                            <option value="">Pilih Tipe...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($tipeses as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <label for="#">Tingkatan</label>
                         <select name="filterTingkatan" id="filterTingkatan" class="form-control">
-                            <option value="">Pilih Tingkatan...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($tingkatans as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <label for="#">Kelas</label>
                         <select name="filterKelas" id="filterKelas" class="form-control">
-                            <option value="">Pilih Kelas...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($kelases as $row)
                                 <option value="{{ $row->id_kelas }}">{{ $row->nama_kelas }}</option>
                             @endforeach
@@ -52,31 +52,31 @@
                     <div class="form-group">
                         <label for="#">Status Pilih</label>
                         <select name="filterStatusPilih" id="filterStatusPilih" class="form-control">
-                            <option value="">Pilih Status Pilih...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($statusPilih as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
+                {{-- <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="#">Hasil Pilih</label>
                         <select name="filterHasilPilih" id="filterHasilPilih" class="form-control">
-                            <option value="">Pilih Hasil Pilih...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($hasilPilih as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
                         </select>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
 
     <div class="card">
         <div class="card-body table-responsive">
-            <table id="tblPemilih" class="table table-bordered">
+            <table id="tblPemilih" class="table table-bordered" style="width: 100%">
                 <thead>
                     <tr>
                         <th class="border-y-none" width="5">#</th>
@@ -84,11 +84,11 @@
                         <th class="border-y-none text-center" width="5">Tipe</th>
                         <th class="border-y-none">Waktu</th>
                         <th class="border-y-none text-center" width="5">Status</th>
-                        <th class="text-center border-y-none" width="5">Action</th>
+                        {{-- <th class="text-center border-y-none" width="5">Action</th> --}}
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($pemilihs as $pemilih)
+                    {{-- @foreach ($pemilihs as $pemilih)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $pemilih->nama_peserta }}</td>
@@ -135,7 +135,7 @@
                                 @endif
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach --}}
                 </tbody>
             </table>
         </div>
@@ -155,19 +155,75 @@
 
         function showDatatable() {
             $("#tblPemilih").DataTable({
-                columnDefs: [{
-                    targets: [2, 4, 5],
-                    orderable: false,
-                }]
+                serverSide: true,
+                processing: true,
+                searchDelay: 1500,
+                ordering: false,
+                ajax: {
+                    url: "{{ url('pemilihan') }}",
+                    data: function(data) {
+                        data.tipe = $("#filterTipe").val();
+                        data.tingkatan = $("#filterTingkatan").val();
+                        data.kelas = $("#filterKelas").val();
+                        data.statusPilih = $("#filterStatusPilih").val();
+                        data.hasilPilih = $("#filterHasilPilih").val();
+                    }
+                },
+                drawCallback: function(res) {
+                    console.log(res.json);
+                },
+                columns: [{
+                        data: "no"
+                    },
+                    {
+                        data: "nama_peserta"
+                    },
+                    {
+                        data: "tipe"
+                    },
+                    {
+                        data: "waktu"
+                    },
+                    {
+                        data: "statusPilih"
+                    },
+                    // {
+                    //     data: "hasilPilih"
+                    // },
+                ],
             });
+        }
+
+        function destroyDatatable() {
+            $("#tblPemilih").DataTable().clear().destroy();
         }
 
         $("#filterTipe").select2(configSelect2);
         $("#filterTingkatan").select2(configSelect2);
         $("#filterKelas").select2(configSelect2);
         $("#filterStatusPilih").select2(configSelect2);
-        $("#filterHasilPilih").select2(configSelect2);
+        // $("#filterHasilPilih").select2(configSelect2);
 
         showDatatable();
+
+        $("#filterTipe").change(function() {
+            destroyDatatable();
+            showDatatable();
+        });
+
+        $("#filterTingkatan").change(function() {
+            destroyDatatable();
+            showDatatable();
+        });
+
+        $("#filterKelas").change(function() {
+            destroyDatatable();
+            showDatatable();
+        });
+
+        $("#filterStatusPilih").change(function() {
+            destroyDatatable();
+            showDatatable();
+        });
     </script>
 @endsection

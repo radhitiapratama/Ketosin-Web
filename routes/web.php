@@ -7,6 +7,7 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\PemilihanController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\TPSController;
 use App\Http\Controllers\WaktuController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -64,4 +65,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post("qr-code/store", [QrCodeController::class, 'store']);
 
     Route::post("qr-code/cetak-qr", [QrCodeController::class, 'cetak']);
+
+    Route::get("token-tps", [TPSController::class, 'index']);
 });

@@ -56,6 +56,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/token-tps" class="nav-link {{ Request::is('token-tps', 'token-tps/*') ? 'active' : '' }}">
+                        <i class="nav-icon ri-nft-line"></i>
+                        <p>
+                            Token TPS
+                        </p>
+                    </a>
+                </li>
                 <li class="nav-header">Pengguna</li>
                 <li class="nav-item">
                     <a href="/peserta" class="nav-link {{ Request::is('peserta', 'peserta/*') ? 'active' : '' }}">

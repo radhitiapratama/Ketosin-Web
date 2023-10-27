@@ -34,9 +34,17 @@ class PemilihanController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $columnSearch = [];
+            $columnsSearch = ['p.nama_peserta'];
 
             $table = DB::table("peserta as p");
+
+            if ($request->input("search.value")) {
+                $table->where(function ($q) use ($columnsSearch, $request) {
+                    foreach ($columnsSearch as $column) {
+                        $q->orWhere($column, 'like', '%' . $request->input("search.value") . "%");
+                    }
+                });
+            }
 
             $query = $table->leftJoin("pemilihan as pm", 'pm.id_peserta', '=', 'p.id_peserta')
                 ->orderBy("pm.created_at", 'DESC')

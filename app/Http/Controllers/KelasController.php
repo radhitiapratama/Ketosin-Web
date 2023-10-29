@@ -101,7 +101,7 @@ class KelasController extends Controller
             'nama_kelas' => $request->nama_kelas,
         ]);
 
-        return redirect("/kelas");
+        return redirect("/kelas")->with('successAdd', 'successAdd');
     }
 
     public function edit($id_kelas)

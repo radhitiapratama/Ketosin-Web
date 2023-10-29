@@ -9,6 +9,7 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
 
     <div class="card">
         <div class="card-body">
@@ -57,6 +58,39 @@
 
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <script>
+        @if (session()->has('successAdd'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Batas waktu berhasil di tambahkan',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+
+        @if (session()->has('successUpdate'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Batas waktu berhasil di update',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+    </script>
 
     <script>
         function showDatatable() {

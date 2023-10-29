@@ -41,6 +41,10 @@ class WaktuController extends Controller
             return redirect()->back()->withInput()->withErrors($validator);
         }
 
+        if ($request->finish < $request->start) {
+            return redirect()->back()->withInput()->with("minFinish", "minFinish");
+        }
+
         DB::table("waktu")
             ->update([
                 'status' => 0,
@@ -86,6 +90,10 @@ class WaktuController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        if ($request->finish < $request->start) {
+            return redirect()->back()->with("minFinish", "minFinish")->withInput();
         }
 
         $sql_waktu = Waktu::where("id_waktu", $request->id_waktu)->first();

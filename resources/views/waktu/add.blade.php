@@ -10,17 +10,25 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-body d-flex justify-content-end">
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
+
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end">
             <a href="/batas-waktu" class="btn btn-primary">
                 <i class="ri-arrow-left-line"></i>
                 Kembali
             </a>
         </div>
     </div>
+
     <div class="row">
         <div class="col-12 col-md-6">
-            <div class="card">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <div class="card-title">
+                        Tambah Batas Waktu
+                    </div>
+                </div>
                 <div class="card-body">
                     <form action="/batas-waktu/store" method="POST">
                         @csrf
@@ -52,4 +60,23 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <script>
+        @if (session()->has('minFinish'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Waktu Selesai tidak boleh kurang dari waktu mulai',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+    </script>
 @endsection

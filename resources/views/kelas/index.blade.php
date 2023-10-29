@@ -39,7 +39,7 @@
                     <div class="form-group">
                         <label for="#">Status</label>
                         <select name="filterStatus" id="filterStatus" class="form-control">
-                            <option value="">Pilih Status...</option>
+                            <option value="">Pilih...</option>
                             @foreach ($statuses as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
                             @endforeach
@@ -52,7 +52,7 @@
 
     <div class="card">
         <div class="card-body">
-            <table id="tblKelas" class="table table-bordered">
+            <table id="tblKelas" class="table table-bordered" style="width: 100%">
                 <thead>
                     <tr>
                         <th class="text-center border-y-none" width="5">#</th>
@@ -62,23 +62,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($kelases as $kelas)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $kelas->nama_kelas }}</td>
-                            <td class="text-center">
-                                @if ($kelas->status == 1)
-                                    <span class="badge badge-success p-2">Aktif</span>
-                                @else
-                                    <span class="badge badge-danger p-2">Nonaktif</span>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                <a href="kelas/edit/{{ $kelas->id_kelas }}" class="badge badge-warning p-2"><i
-                                        class="ri-pencil-line"></i></a>
-                            </td>
-                        </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -160,11 +143,37 @@
 
         function showDatatable() {
             $("#tblKelas").DataTable({
-                columnDefs: [{
-                    targets: [0, 3],
-                    orderable: false,
-                }]
+                serverSide: true,
+                processing: true,
+                searchDelay: 1500,
+                ordering: false,
+                ajax: {
+                    url: "{{ url('kelas') }}",
+                    data: function(data) {
+                        data.status = $("#filterStatus").val();
+                    }
+                },
+                drawCallback: function(res) {
+                    console.log(res.json);
+                },
+                columns: [{
+                        data: "no"
+                    },
+                    {
+                        data: "nama_kelas"
+                    },
+                    {
+                        data: "status"
+                    },
+                    {
+                        data: "action"
+                    }
+                ]
             });
+        }
+
+        function destroyDatatable() {
+            $("#tblKelas").DataTable().clear().destroy();
         }
 
         showDatatable();
@@ -172,55 +181,8 @@
         $("#filterStatus").select2(configSelect2);
 
         $("#filterStatus").change(function() {
-            let value = $(this).val();
-
-            $.ajax({
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': csrf,
-                },
-                url: "{{ url('kelas') }}",
-                data: {
-                    status: value,
-                },
-                dataType: "json",
-                success: function(response) {
-                    console.log(response);
-
-                    let kelas = response.kelases;
-                    let html = ``;
-                    let no = 1;
-
-                    for (let i = 0; i < kelas.length; i++) {
-                        let status = ``;
-
-                        if (kelas[i].status == 1) {
-                            status = `<span class="badge badge-success p-2">Aktif</span>`;
-                        }
-
-                        if (kelas[i].status == 0) {
-                            status = `<span class="badge badge-danger p-2">Nonaktif</span>`;
-                        }
-
-                        html += `
-                        <tr>
-                            <td>${no}</td>
-                            <td>${kelas[i].nama_kelas}</td>
-                            <td class="text-center">
-                              ${status}
-                            </td>
-                            <td class="text-center">
-                                <a href="kelas/edit/${kelas[i].id_kelas}" class="badge badge-warning p-2"><i
-                                        class="ri-pencil-line"></i></a>
-                            </td>
-                        </tr>
-                        `;
-                        no++;
-                    }
-
-                    $("#tblKelas tbody").html(html);
-                }
-            });
+            destroyDatatable();
+            showDatatable();
         });
     </script>
 @endsection

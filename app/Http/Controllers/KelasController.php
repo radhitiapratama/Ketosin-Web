@@ -18,24 +18,62 @@ class KelasController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $status = $request->status;
+            $columnsSearch = ['nama_kelas'];
 
-            $sql_kelas = DB::table("kelas");
+            $table  = DB::table("kelas");
 
-            if ($status != "") {
-                $sql_kelas->where("status", $status);
+            if ($request->input("search.value")) {
+                $table->where(function ($q) use ($columnsSearch, $request) {
+                    foreach ($columnsSearch as $column) {
+                        $q->orWhere($column, 'like', '%' . $request->input("search.value") . "%");
+                    }
+                });
+            }
+
+            if ($request->status != null) {
+                $table->where("status", $request->status);
+            }
+
+            $count = $table->count();
+
+            $result = $table->offset($request->start)
+                ->limit($request->length)
+                ->orderBy("nama_kelas", "ASC")
+                ->get();
+
+            $data = [];
+
+            if (!empty($result)) {
+                $i = $request->start;
+                foreach ($result as $row) {
+                    $i++;
+                    $subData = [];
+                    $status = $this->checkStatus($row->status);
+
+                    $subData['no'] = $i;
+                    $subData['nama_kelas'] = $row->nama_kelas;
+                    $subData['status'] = '
+                    <div class="text-center">
+                    ' . $status . '
+                    </div>';
+                    $subData['action'] = '
+                    <div class="text-center">
+                        <a href="kelas/edit/' . $row->id_kelas . '" class="badge badge-warning p-2"><i class="ri-pencil-line"></i></a>
+                    </div>
+                    ';
+                    $data[] = $subData;
+                }
             }
 
             return response()->json([
-                'status' => true,
-                'kelases' => $sql_kelas->get(),
+                'draw' => $request->draw,
+                'recordsFiltered' => $count,
+                'recordsTotal' => $count,
+                'data' => $data,
             ]);
         }
 
-        $sql_kelas = Kelas::get();
-
         $dataToVieww = [
-            'kelases' => $sql_kelas,
             'statuses' => $this->statuses,
         ];
 
@@ -106,7 +144,7 @@ class KelasController extends Controller
         if ($sql_kelas->nama_kelas != $request->nama_kelas) {
             $sql_check = Kelas::where("nama_kelas", $request->nama_kelas)->first();
             if ($sql_check) {
-                return redirect()->with("duplicate", "duplicate");
+                return redirect()->back()->with("duplicate", "duplicate")->withInput();
             }
 
             $dataUpdate['nama_kelas'] = $request->nama_kelas;
@@ -131,5 +169,18 @@ class KelasController extends Controller
         $kelasImport->import($file);
 
         return redirect()->back()->with("success_import", "success_import");
+    }
+
+    public function checkStatus($status)
+    {
+        if ($status == 1) {
+            return '<span class="badge badge-success p-2">Aktif</span>';
+        }
+
+        if ($status == 0) {
+            return '<span class="badge badge-danger p-2">Nonaktif</span>';
+        }
+
+        return null;
     }
 }

@@ -212,3 +212,7 @@
 .card-primary .card-header {
     background: var(--primary) !important;
 }
+
+.pointer-none {
+    pointer-events: none;
+}

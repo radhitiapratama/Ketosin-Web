@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\PesertaImport;
+use App\Models\Kandidat;
 use App\Models\Kelas;
 use App\Models\Peserta;
 use Illuminate\Support\Str;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use PDO;
 use Symfony\Component\CssSelector\XPath\Extension\FunctionExtension;
+
+use function PHPUnit\Framework\isNull;
 
 class PesertaController extends Controller
 {
@@ -90,6 +93,8 @@ class PesertaController extends Controller
                     $subData['status'] = '
                     <div class="text-center"> ' . $status . ' </div>
                     ';
+
+
                     $subData['action'] = '
                     <div class="d-flex justify-content-center gap-20 text-center">
                         <button type="button" class="badge badge-primary p-2 btn-detail-qr"
@@ -208,6 +213,7 @@ class PesertaController extends Controller
         }
 
         $sql_kelas = Kelas::where("status", 1)->get();
+        $sql_kandidat = Kandidat::where("id_ketua", $id_peserta)->orWhere("id_wakil", $id_peserta)->first();
 
         $dataToView = [
             'peserta' => $sql_peserta,
@@ -215,43 +221,87 @@ class PesertaController extends Controller
             'tingkatans' => $this->tingkatans,
             'statuses' => $this->statuses,
             'kelases' => $sql_kelas,
+            'isKandidat' => 0,
         ];
+
+        if (!empty($sql_kandidat)) {
+            $dataToView['isKandidat'] = 1;
+        }
 
         return view("peserta.edit", $dataToView);
     }
 
     public function update(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_peserta' => "required",
-            'tipe' => "required",
-            'tingkatan' => "required",
-            'kelas' => "required",
-            'status' => "required",
+        $validator1 = Validator::make($request->all(), [
+            'isKandidat' => "required",
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator);
+        if ($validator1->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator1);
+        }
+
+        $isKandidat = $request->isKandidat;
+        $tipe = $request->tipe;
+
+        // check jika kandidat
+        if ($isKandidat) {
+            $validator = Validator::make($request->all(), [
+                'nama_peserta' => "required",
+                'tingkatan' => "required",
+                'kelas' => "required",
+                'status' => "required",
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+        }
+
+        // validasi jika tipenya siswa
+        if ($tipe == 1) {
+            $validator = Validator::make($request->all(), [
+                'nama_peserta' => "required",
+                'tipe' => "required",
+                'tingkatan' => "required",
+                'kelas' => "required",
+                'status' => "required",
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+        }
+
+        // validasi jika tipe guru / karyawan
+        if ($tipe == 2 || $tipe == 3) {
+            $validator = Validator::make($request->all(), [
+                'nama_peserta' => "required",
+                'tipe' => "required",
+                'status' => "required",
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
         }
 
         $id_peserta = $request->id_peserta;
 
         if (empty($id_peserta)) {
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
 
         $sql_peserta = Peserta::where("id_peserta", $id_peserta)->first();
 
         if (empty($sql_peserta)) {
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
-
-        $dataUpdate = [];
 
         if ($sql_peserta->nama_peserta != $request->nama_peserta) {
             $sql_check = Peserta::where("nama_peserta", $request->nama_peserta)->first();
             if ($sql_check) {
-                return redirect()->back()->with("duplicate", "duplicate");
+                return redirect()->back()->with("duplicate", "duplicate")->withInput();
             }
             $dataUpdate['nama_peserta'] = $request->nama_peserta;
         }
@@ -260,16 +310,22 @@ class PesertaController extends Controller
             $dataUpdate['tipe'] = $request->tipe;
         }
 
-        if ($sql_peserta->tingkatan != $request->tingkatan) {
-            $dataUpdate['tingkatan'] = $request->tingkatan;
-        }
-
-        if ($sql_peserta->kelas != $request->kelas) {
-            $dataUpdate['id_kelas'] = $request->kelas;
-        }
 
         if ($sql_peserta->status != $request->status) {
             $dataUpdate['status'] = $request->status;
+        }
+
+        if ($tipe == 1) {
+            if ($sql_peserta->tingkatan != $request->tingkatan) {
+                $dataUpdate['tingkatan'] = $request->tingkatan;
+            }
+
+            if ($sql_peserta->kelas != $request->kelas) {
+                $dataUpdate['id_kelas'] = $request->kelas;
+            }
+        } else {
+            $dataUpdate['tingkatan'] = null;
+            $dataUpdate['id_kelas'] = null;
         }
 
         if (!empty($dataUpdate)) {
@@ -331,7 +387,7 @@ class PesertaController extends Controller
             return '<span class="badge badge-success p-2">Aktif</span>';
         }
 
-        if ($status = 0) {
+        if ($status == 0) {
             return '<span class="badge badge-danger p-2">Nonaktif</span>';
         }
 

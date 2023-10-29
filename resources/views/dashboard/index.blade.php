@@ -42,7 +42,7 @@
                 <div class="icon">
                     <i class="ri-signal-tower-line"></i>
                 </div>
-                <a href="/pemilih" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="/pemilihan" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-6">

@@ -49,7 +49,7 @@ class PesertaController extends Controller
 
             $sql_peserta = $table
                 ->select('p.*', 'k.nama_kelas')
-                ->join('kelas as k', 'k.id_kelas', '=', 'p.id_kelas');
+                ->leftJoin('kelas as k', 'k.id_kelas', '=', 'p.id_kelas');
 
             if ($request->tipe != null) {
                 $sql_peserta->where("p.tipe", $request->tipe);
@@ -142,24 +142,55 @@ class PesertaController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_peserta' => "required|unique:peserta,nama_peserta",
+        $validator1  = Validator::make($request->all(), [
             'tipe' => "required",
-            'tingkatan' => "required",
-            'kelas' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator);
+        if ($validator1->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator1);
         }
 
-        Peserta::create([
-            'nama_peserta' => $request->nama_peserta,
-            'tipe' => $request->tipe,
-            'qr_code' => Str::random(40),
-            'tingkatan' => $request->tingkatan,
-            'id_kelas' => $request->kelas,
-        ]);
+        $tipe = $request->tipe;
+
+        if ($tipe == 1) {
+            $validator = Validator::make($request->all(), [
+                'nama_peserta' => "required|unique:peserta,nama_peserta",
+                'tipe' => "required",
+                'tingkatan' => "required",
+                'kelas' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+
+            Peserta::create([
+                'nama_peserta' => $request->nama_peserta,
+                'tipe' => $request->tipe,
+                'qr_code' => Str::random(40),
+                'tingkatan' => $request->tingkatan,
+                'id_kelas' => $request->kelas,
+            ]);
+        }
+
+        if ($tipe == 2 || $tipe == 3) {
+            $validator = Validator::make($request->all(), [
+                'nama_peserta' => "required|unique:peserta,nama_peserta",
+                'tipe' => "required",
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+
+            Peserta::create([
+                'nama_peserta' => $request->nama_peserta,
+                'tipe' => $request->tipe,
+                'qr_code' => Str::random(40),
+                'tingkatan' => null,
+                'id_kelas' => null,
+            ]);
+        }
 
         return redirect("/peserta")->with("successAdd", "successAdd");
     }

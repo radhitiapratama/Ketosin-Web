@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string("nama_peserta");
             $table->integer("tipe");
             $table->string("qr_code")->nullable();
-            $table->integer("tingkatan");
-            $table->foreignId("id_kelas")->references("id_kelas")->on("kelas");
+            $table->integer("tingkatan")->nullable();
+            $table->foreignId("id_kelas")->nullable()->references("id_kelas")->on("kelas");
             $table->integer("status")->default(1);
             $table->timestamps();
         });

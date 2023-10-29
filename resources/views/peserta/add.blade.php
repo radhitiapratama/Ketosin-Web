@@ -22,55 +22,46 @@
         </div>
     </div>
 
-
-    <div class="card">
-        <div class="card-body">
-            <form action="/peserta/store" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="#">Nama Peserta</label>
-                            <input type="text" class="form-control" name="nama_peserta" placeholder="Nama Peserta...">
-                            @error('nama_peserta')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/peserta/store" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="#">Nama Peserta</label>
+                                    <input type="text" class="form-control" name="nama_peserta"
+                                        placeholder="Nama Peserta..." required>
+                                    @error('nama_peserta')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="#">Tipe</label>
+                                    <select name="tipe" id="tipe" class="form-control" required>
+                                        <option value="">Pilih Tipe...</option>
+                                        @foreach ($tipeses as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 ">
+                                <div class="row tipe-wrapper"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label for="#">Tipe</label>
-                        <select name="tipe" id="tipe" class="form-control">
-                            <option value="">Pilih Tipe...</option>
-                            @foreach ($tipeses as $key => $value)
-                                <option value="{{ $key }}">{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label for="#">Tingkatan</label>
-                        <select name="tingkatan" id="tingkatan" class="form-control">
-                            <option value="">Pilih Tingkatan...</option>
-                            @foreach ($tingkatans as $key => $value)
-                                <option value="{{ $key }}">{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <label for="#">Kelas</label>
-                        <select name="kelas" id="kelas" class="form-control">
-                            <option value="">Pilih Kelas...</option>
-                            @foreach ($kelases as $kelas)
-                                <option value="{{ $kelas->id_kelas }}">{{ $kelas->nama_kelas }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -82,8 +73,45 @@
             width: "100%"
         }
 
+        const typeFormSiswa = `
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label for="#">Tingkatan</label>
+                <select name="tingkatan" id="tingkatan" class="form-control" required>
+                    <option value="">Pilih Tingkatan...</option>
+                    @foreach ($tingkatans as $key => $value)
+                        <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label for="#">Kelas</label>
+                <select name="kelas" id="kelas" class="form-control" required>
+                    <option value="">Pilih Kelas...</option>
+                    @foreach ($kelases as $kelas)
+                        <option value="{{ $kelas->id_kelas }}">{{ $kelas->nama_kelas }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        `;
+
         $("#tipe").select2(configSelect2);
         $("#tingkatan").select2(configSelect2);
         $("#kelas").select2(configSelect2);
+
+        $("#tipe").change(function() {
+            let val = $(this).val();
+
+            if (val == 1) {
+                $(".tipe-wrapper").html(typeFormSiswa);
+            }
+
+            if (val == 2 || val == 3) {
+                $(".tipe-wrapper").html('');
+            }
+        });
     </script>
 @endsection

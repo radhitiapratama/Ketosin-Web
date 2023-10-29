@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ketosin | @yield('title')</title>
 
-    <link rel="shortcut icon" href="{{ asset('main-assets/imgs/logo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('main-assets/imgs/light-logo.png') }}" type="image/x-icon" id="fav-icon">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -25,9 +25,12 @@
     <script src="/plugins/jquery/jquery.min.js"></script>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
-    <div class="wrapper">
+<body onload="hideLoader()" class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+    <div class="loader-wrapper">
+        <img src="{{ asset('main-assets/imgs/loader.svg') }}" alt="loader">
+    </div>
 
+    <div class="wrapper">
         <!-- Preloader -->
         {{-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60"
@@ -76,6 +79,7 @@
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/dist/js/adminlte.js"></script>
+    <script src="{{ asset('main-assets/js/app.js') }}"></script>
 </body>
 
 </html>

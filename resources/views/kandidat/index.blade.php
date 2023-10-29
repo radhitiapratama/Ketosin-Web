@@ -56,7 +56,8 @@
                             @endif {{ $kandidat->kelas_wakil }}
                         </p>
                         <div class="d-flex" style="gap: 20px">
-                            <a href="#" class="btn btn-primary">Detail <i class="ri-information-line"></i> </a>
+                            <a href="/kandidat/detail/{{ $kandidat->id_kandidat }}" class="btn btn-primary">Detail <i
+                                    class="ri-information-line"></i> </a>
                             <a href="/kandidat/edit/{{ $kandidat->id_kandidat }}" class="btn btn-warning">Edit <i
                                     class="ri-pencil-line"></i></a>
                         </div>

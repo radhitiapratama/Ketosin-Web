@@ -93,7 +93,7 @@
                     <div class="col-md-6 col-12">
                         <div class="form-group">
                             <label>Visi</label>
-                            <textarea class="form-control" name="visi" rows="5" placeholder="Tuliskan Visi..."></textarea>
+                            <textarea class="form-control" name="visi" rows="10" placeholder="Tuliskan Visi..."></textarea>
                             @error('visi')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -102,7 +102,7 @@
                     <div class="col-md-6 col-12">
                         <div class="form-group">
                             <label>Misi</label>
-                            <textarea class="form-control" name="misi" rows="5" placeholder="Tuliskan Misi..."></textarea>
+                            <textarea class="form-control" name="misi" rows="10" placeholder="Tuliskan Misi..."></textarea>
                             @error('misi')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror

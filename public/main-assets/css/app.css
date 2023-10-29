@@ -31,6 +31,26 @@
     font-family: 'Poppins', sans-serif;
 }
 
+
+.content-header h1 {
+    font-size: 24px;
+    padding-left: 8px;
+    margin-top: 5px !important;
+}
+
+.loader-wrapper {
+    position: fixed;
+    width: 100%;
+    min-height: 100vh;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .gap-20 {
     gap: 20px;
 }
@@ -157,4 +177,38 @@
 .page-link,
 .page-link:hover {
     color: var(--primary);
+}
+
+.bg-info {
+    background: var(--info) !important;
+}
+
+.bg-success {
+    background: var(--success) !important;
+}
+
+.bg-warning {
+    color: var(--white) !important;
+    background: var(--warning) !important;
+}
+
+.bg-warning,
+.bg-warning>a {
+    color: var(--white) !important;
+}
+
+.bg-danger {
+    background: var(--danger) !important;
+}
+
+.bg-secondary {
+    background: var(--secondary) !important;
+}
+
+.card-success .card-header {
+    background: var(--success) !important;
+}
+
+.card-primary .card-header {
+    background: var(--primary) !important;
 }

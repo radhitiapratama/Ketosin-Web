@@ -11,6 +11,7 @@ use App\Http\Controllers\TPSController;
 use App\Http\Controllers\WaktuController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Row;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post("kandidat/store", [KandidatController::class, 'store']);
     Route::get("kandidat/edit/{id_kandidat}", [KandidatController::class, 'edit']);
     Route::post("kandidat/update", [KandidatController::class, 'update']);
+    Route::get("kandidat/detail/{id_kandidat}", [KandidatController::class, 'detail']);
 
     Route::match(['get', 'post'], "pemilihan", [PemilihanController::class, 'index']);
 

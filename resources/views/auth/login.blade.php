@@ -40,7 +40,7 @@
                         Selamat Datang
                     </span>
                     <span class="login100-form-title p-b-48">
-                        <img src="{{ asset('main-assets/imgs/logo.png') }}" style="width: 100px;height: 100px;"
+                        <img src="{{ asset('main-assets/imgs/dark-logo.png') }}" style="width: 100px;height: 100px;"
                             alt="">
                     </span>
 

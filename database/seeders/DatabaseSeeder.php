@@ -14,6 +14,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
+use function PHPSTORM_META\map;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -30,11 +32,11 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        User::create([
-            'name' => "admin",
-            'email' => "admin@gmail.com",
-            'password' => Hash::make("123456"),
-        ]);
+        // User::create([
+        //     'name' => "admin",
+        //     'email' => "admin@gmail.com",
+        //     'password' => Hash::make("123456"),
+        // ]);
 
         // Kelas::insert([
         //     [
@@ -159,5 +161,46 @@ class DatabaseSeeder extends Seeder
         //         'updated_at' => Carbon::now(),
         //     ],
         // ]);
+
+        DB::table("pemilihan")
+            ->insert(
+                [
+                    [
+                        'id_peserta' => 200,
+                        'id_kandidat' => 1,
+                        'waktu' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ],
+                    [
+                        'id_peserta' => 201,
+                        'id_kandidat' => 1,
+                        'waktu' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ],
+                    [
+                        'id_peserta' => 202,
+                        'id_kandidat' => 2,
+                        'waktu' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ],
+                    [
+                        'id_peserta' => 203,
+                        'id_kandidat' => 2,
+                        'waktu' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ],
+                    [
+                        'id_peserta' => 204,
+                        'id_kandidat' => 1,
+                        'waktu' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ],
+                ]
+            );
     }
 }

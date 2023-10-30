@@ -75,7 +75,7 @@
                                                 <select name="kelas" id="kelas" class="form-control" required>
                                                     <option value="">Pilih Kelas...</option>
                                                     @foreach ($kelases as $kelas)
-                                                        <option @selected(old('kelas') == $key) value="{{ $kelas->id_kelas }}">
+                                                        <option @selected(old('kelas') == $kelas->id_kelas) value="{{ $kelas->id_kelas }}">
                                                             {{ $kelas->nama_kelas }}
                                                         </option>
                                                     @endforeach

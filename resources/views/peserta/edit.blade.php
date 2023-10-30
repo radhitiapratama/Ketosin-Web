@@ -45,15 +45,27 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="#">Tipe</label>
-                                    <select name="tipe" id="tipe" class="form-control"
-                                        {{ $isKandidat ? 'disabled' : '' }} required>
-                                        <option value="">Pilih Tipe...</option>
-                                        @foreach ($tipeses as $key => $value)
-                                            <option value="{{ $key }}" @selected(old('tipe', $peserta->tipe) == $key)>
-                                                {{ $value }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    @if ($isKandidat)
+                                        <input type="hidden" name="tipe" value="{{ old('tipe', $peserta->tipe) }}">
+                                        <select id="tipe" class="form-control" {{ $isKandidat ? 'disabled' : '' }}
+                                            required>
+                                            <option value="">Pilih Tipe...</option>
+                                            @foreach ($tipeses as $key => $value)
+                                                <option value="{{ $key }}" @selected(old('tipe', $peserta->tipe) == $key)>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    @else
+                                        <select name="tipe" id="tipe" class="form-control" required>
+                                            <option value="">Pilih Tipe...</option>
+                                            @foreach ($tipeses as $key => $value)
+                                                <option value="{{ $key }}" @selected(old('tipe', $peserta->tipe) == $key)>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-12 form-siswa-wrapper">

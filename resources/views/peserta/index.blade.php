@@ -94,54 +94,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($pesertas as $peserta)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $peserta->nama_peserta }}</td>
-                            <td>
-                                @if ($peserta->tipe == 1)
-                                    Siswa
-                                @endif
-                                @if ($peserta->tipe == 2)
-                                    Guru
-                                @endif
-                                @if ($peserta->tipe == 3)
-                                    Karyawan
-                                @endif
-                            </td>
-                            <td>
-                                @if ($peserta->tingkatan == 1)
-                                    X
-                                @endif
-                                @if ($peserta->tingkatan == 2)
-                                    XI
-                                @endif
-                                @if ($peserta->tingkatan == 3)
-                                    XII
-                                @endif
-                                {{ $peserta->nama_kelas }}
-                            </td>
-                            <td class="text-center">
-                                @if ($peserta->status == 1)
-                                    <span class="badge badge-success p-2">Aktif</span>
-                                @else
-                                    <span class="badge badge-danger p-2">Nonaktif</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-center gap-20">
-                                    <button type="button" class="badge badge-primary p-2 btn-detail-qr"
-                                        data-qr-value="{{ $peserta->qr_code }}" data-toggle="modal" data-target="#modalQr">
-                                        <i class="ri-qr-code-line"></i>
-                                    </button>
-                                    <a href="/peserta/edit/{{ $peserta->id_peserta }}" class="badge badge-warning p-2">
-                                        <i class="ri-pencil-line"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach --}}
-
                 </tbody>
             </table>
         </div>
@@ -259,6 +211,36 @@
                 icon: 'success',
                 iconColor: "#FFF",
                 title: 'Data Peserta berhasil di import',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+
+        @if (session()->has('successAdd'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Data Peserta berhasil di tambahkan',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+
+        @if (session()->has('successUpdate'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Data Peserta berhasil di update',
                 showConfirmButton: false,
                 customClass: {
                     popup: 'colored-toast'

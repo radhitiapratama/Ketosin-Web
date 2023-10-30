@@ -159,7 +159,7 @@ class KelasController extends Controller
                 ->update($dataUpdate);
         }
 
-        return redirect("kelas");
+        return redirect("kelas")->with("successUpdate", "successUpdate");
     }
 
     public function import(Request $request)

@@ -144,6 +144,21 @@
                 toast: true
             });
         @endif
+
+        @if (session()->has('successUpdate'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Kelas berhasil di update',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
     </script>
 
     <script>

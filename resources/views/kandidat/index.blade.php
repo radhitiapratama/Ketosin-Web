@@ -9,6 +9,7 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
 
     <div class="card">
         <div class="card-body">
@@ -20,7 +21,7 @@
         <div class="col-12 d-flex flex-wrap" style="gap: 50px">
             @foreach ($kandidats as $kandidat)
                 <div class="card" style="width: 18rem; overflow: hidden;">
-                    <div style="height: 50%">
+                    <div>
                         @if ($kandidat->foto)
                             <img src="{{ asset('/storage/img-uploads/' . $kandidat->foto) }}" class="card-img-top"
                                 alt="..." style="width: 100%;height: 100%; object-fit: cover">
@@ -71,6 +72,22 @@
 
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
-    <script></script>
+    <script>
+        @if (session()->has('successAdd'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Kandidat berhasil di tambahkan',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+    </script>
 @endsection

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Psy\CodeCleaner\FunctionReturnInWriteContextPass;
 use Spatie\LaravelIgnition\Support\Composer\FakeComposer;
 
 class KandidatController extends Controller
@@ -19,7 +20,7 @@ class KandidatController extends Controller
             ->first();
 
         $sql_kandidat = DB::table("kandidat as k")
-            ->select('k.slogan', 'k.visi', 'k.misi', 'foto', 'p1.nama_peserta as nama_ketua', 'p1.tipe as tipe_ketua', 'p1.tingkatan as tingkatan_ketua', 'ks1.nama_kelas as kelas_ketua', 'p2.nama_peserta as nama_wakil', 'p2.tipe as tipe_wakil', 'p2.tingkatan as tingkatan_wakil', 'ks2.nama_kelas as kelas_wakil')
+            ->select('k.id_kandidat', 'k.slogan', 'k.visi', 'k.misi', 'foto', 'p1.nama_peserta as nama_ketua', 'p1.tipe as tipe_ketua', 'p1.tingkatan as tingkatan_ketua', 'ks1.nama_kelas as kelas_ketua', 'p2.nama_peserta as nama_wakil', 'p2.tipe as tipe_wakil', 'p2.tingkatan as tingkatan_wakil', 'ks2.nama_kelas as kelas_wakil')
             ->join('peserta as p1', 'p1.id_peserta', '=', 'k.id_ketua')
             ->join('peserta as p2', 'p2.id_peserta', '=', 'k.id_wakil')
             ->join('kelas as ks1', 'ks1.id_kelas', '=', 'p1.id_kelas')
@@ -132,6 +133,74 @@ class KandidatController extends Controller
                 'status' => true,
                 'message' => "Anda berhasil memilih",
             ]);
+        }
+    }
+
+    public function detail($id_kandidat)
+    {
+        if (!isset($id_kandidat)) {
+            return response()->json([
+                'status' => false,
+                'message' => "Wajib mengirim ID Kandidat",
+            ]);
+        }
+
+        $sql_kandidat = DB::table("kandidat as k")
+            ->select('k.visi', 'k.misi', 'k.slogan', 'k.foto', 'p1.nama_peserta as nama_ketua', 'p1.tingkatan as tingkatan_ketua', 'ks1.nama_kelas as kelas_ketua', 'p2.nama_peserta as nama_wakil', 'p2.tingkatan as tingkatan_wakil', 'ks2.nama_kelas as kelas_wakil')
+            ->join('peserta as p1', 'p1.id_peserta', '=', 'k.id_ketua')
+            ->join('peserta as p2', 'p2.id_peserta', '=', 'k.id_wakil')
+            ->join('kelas as ks1', 'ks1.id_kelas', '=', 'p1.id_kelas')
+            ->join('kelas as ks2', 'ks2.id_kelas', '=', 'p2.id_kelas')
+            ->where('k.id_kandidat', $id_kandidat)
+            ->first();
+
+        if (empty($sql_kandidat)) {
+            return response()->json([
+                'status' => false,
+                'message' => "Data Kandidat tidak di temukan !",
+            ]);
+        }
+
+        $misiArr = explode("|", $sql_kandidat->misi);
+        $dataMisi = [];
+
+        if (count($misiArr) > 0) {
+            foreach ($misiArr as $row) {
+                array_push($dataMisi, $row);
+            }
+        } else {
+            array_push($dataMisi, $misiArr[0]);
+        }
+
+        $dataKandidat = [
+            'nama_ketua' => $sql_kandidat->nama_ketua,
+            'kelas_ketua' => $this->checkTingkatan($sql_kandidat->tingkatan_ketua) . " " . $sql_kandidat->kelas_ketua,
+            'nama_wakil' => $sql_kandidat->nama_wakil,
+            'kelas_wakil' => $this->checkTingkatan($sql_kandidat->tingkatan_wakil) . " " . $sql_kandidat->kelas_wakil,
+            'visi' => $sql_kandidat->visi,
+            'misi' => $dataMisi,
+            'slogan' => $sql_kandidat->slogan,
+            'foto' => $sql_kandidat->foto,
+        ];
+
+        return response()->json([
+            'status' => true,
+            'kandidat' => $dataKandidat,
+        ]);
+    }
+
+    public function checkTingkatan($tingkatan)
+    {
+        if ($tingkatan == 1) {
+            return "X";
+        }
+
+        if ($tingkatan == 2) {
+            return "XI";
+        }
+
+        if ($tingkatan == 3) {
+            return "XII";
         }
     }
 }

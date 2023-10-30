@@ -21,7 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::post("login", [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post("kandidat", [KandidatController::class, 'index']);
+    Route::get("kandidat", [KandidatController::class, 'index']);
+    Route::get("kandidat/detail/{id_kandidat}", [KandidatController::class, 'detail']);
     Route::post("kandidat/vote", [KandidatController::class, 'vote']);
     Route::get("profile", [AccountController::class, 'index']);
     Route::get("logout", [AuthController::class, 'logout']);

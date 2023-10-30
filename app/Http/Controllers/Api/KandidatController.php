@@ -48,12 +48,26 @@ class KandidatController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id_kandidat' => "required",
+            'qr_tps' => "required"
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => "Validation failed",
+            ]);
+        }
+
+        $tokens = [
+            'TPS 1' => "TokenTPS1",
+            'TPS 2' => 'TokenTPS2',
+            'TPS 3' => 'TokenTPS3',
+        ];
+
+        if (!in_array($request->qr_tps, $tokens)) {
+            return response()->json([
+                'status' => false,
+                'message' => "QR TPS Tidak Valid",
             ]);
         }
 
@@ -69,7 +83,7 @@ class KandidatController extends Controller
         if (!$sql_checkPeserta) {
             return response()->json([
                 'status' => false,
-                'message' => "ID Peserta tidak di temukan !",
+                'message' => "Peserta Pemilih Tidak Valid",
             ]);
         }
 
@@ -81,7 +95,7 @@ class KandidatController extends Controller
         if (!$sql_waktu) {
             return response()->json([
                 'status' => false,
-                'message' => "Batas Waktu belum ada"
+                'message' => "Waktu Pemilihan Belum Ditentukan"
             ]);
         }
 
@@ -93,7 +107,7 @@ class KandidatController extends Controller
         if ($sql_check) {
             return response()->json([
                 'status' => false,
-                'message' => "Gagal ! anda sudah memilih",
+                'message' => "Anda Sudah Memilih Kandidat",
             ]);
         }
 
@@ -103,7 +117,7 @@ class KandidatController extends Controller
         if ($waktuSaatIni <= $sql_waktu->start) {
             return response()->json([
                 'status' => false,
-                'message' => "Gagal ! Kurang dari batas waktu"
+                'message' => "Pemilihan Belum Dimulai"
             ]);
         }
 
@@ -111,7 +125,7 @@ class KandidatController extends Controller
         if ($waktuSaatIni >= $sql_waktu->finish) {
             return response()->json([
                 'status' => false,
-                'message' => "Gagal ! Lebih dari batas waktu"
+                'message' => "Pemilihan Telah Berakhir"
             ]);
         }
 
@@ -131,7 +145,7 @@ class KandidatController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => "Anda berhasil memilih",
+                'message' => "Pilihan Anda Berhasil Terekam",
             ]);
         }
     }

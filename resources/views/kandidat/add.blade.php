@@ -30,10 +30,10 @@
                     <div class="col-md-4 col-12">
                         <div class="form-group">
                             <label for="#">Ketua</label>
-                            <select name="ketua" id="ketua" class="form-control">
+                            <select name="ketua" id="ketua" class="form-control" required>
                                 <option value="">Pilih Ketua...</option>
                                 @foreach ($pesertas as $peserta)
-                                    <option value="{{ $peserta->id_peserta }}" @selected(old('ketua'))>
+                                    <option value="{{ $peserta->id_peserta }}" @selected(old('ketua') == $peserta->id_peserta)>
                                         {{ $peserta->nama_peserta }}</option>
                                 @endforeach
                             </select>
@@ -45,10 +45,11 @@
                     <div class="col-md-4 col-12">
                         <div class="form-group">
                             <label for="#">Wakil</label>
-                            <select name="wakil" id="wakil" class="form-control">
+                            <select name="wakil" id="wakil" class="form-control" required>
                                 <option value="">Pilih Wakil...</option>
                                 @foreach ($pesertas as $peserta)
-                                    <option value="{{ $peserta->id_peserta }}">{{ $peserta->nama_peserta }}</option>
+                                    <option value="{{ $peserta->id_peserta }}" @selected(old('wakil') == $peserta->id_peserta)>
+                                        {{ $peserta->nama_peserta }}</option>
                                 @endforeach
                             </select>
                             @error('wakil')
@@ -62,7 +63,7 @@
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="exampleInputFile"
-                                        accept=".png,.jpg,.jpeg" name="foto">
+                                        accept=".png,.jpg,.jpeg" name="foto" value="{{ old('foto') }}">
                                     <label class="custom-file-label" for="exampleInputFile">Pilih Foto</label>
                                 </div>
                                 <div class="input-group-append">
@@ -84,7 +85,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label for="#">Slogan</label>
-                            <input type="text" class="form-control" name="slogan">
+                            <input type="text" class="form-control" name="slogan" value="{{ old('slogan') }}" required>
                             @error('slogan')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -93,7 +94,7 @@
                     <div class="col-md-6 col-12">
                         <div class="form-group">
                             <label>Visi</label>
-                            <textarea class="form-control" name="visi" rows="10" placeholder="Tuliskan Visi..."></textarea>
+                            <textarea class="form-control" name="visi" rows="10" placeholder="Tuliskan Visi..." required>{{ old('visi') }}</textarea>
                             @error('visi')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -102,7 +103,7 @@
                     <div class="col-md-6 col-12">
                         <div class="form-group">
                             <label>Misi</label>
-                            <textarea class="form-control" name="misi" rows="10" placeholder="Tuliskan Misi..."></textarea>
+                            <textarea class="form-control" name="misi" rows="10" placeholder="Tuliskan Misi..." required>{{ old('misi') }}</textarea>
                             @error('misi')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror

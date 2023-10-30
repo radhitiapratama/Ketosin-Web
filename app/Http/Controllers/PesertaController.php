@@ -10,11 +10,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
-use PDO;
-use Symfony\Component\CssSelector\XPath\Extension\FunctionExtension;
-
-use function PHPUnit\Framework\isNull;
 
 class PesertaController extends Controller
 {
@@ -97,6 +92,9 @@ class PesertaController extends Controller
 
                     $subData['action'] = '
                     <div class="d-flex justify-content-center gap-20 text-center">
+                        <a href="/peserta/vote/' . $row->id_peserta . '" class="badge badge-info p-2">
+                            <i class="ri-radio-button-line"></i>
+                        </a>
                         <button type="button" class="badge badge-primary p-2 btn-detail-qr"
                             data-qr-value="' . $row->qr_code . '" data-toggle="modal" data-target="#modalQr">
                             <i class="ri-qr-code-line"></i>
@@ -392,5 +390,54 @@ class PesertaController extends Controller
         }
 
         return null;
+    }
+
+    public function vote($id_peserta)
+    {
+        if (empty($id_peserta)) {
+            return redirect('peserta');
+        }
+
+        $sql_peserta = Peserta::where("id_peserta", $id_peserta)->first();
+
+        if (empty($sql_peserta)) {
+            return redirect('peserta');
+        }
+
+        $sql_check = DB::table("pemilihan")
+            ->where("id_peserta", $id_peserta)
+            ->first();
+
+        $sql_kandidat = DB::table("kandidat as k")
+            ->select(
+                'k.*',
+                'p1.nama_peserta as nama_ketua',
+                'p2.nama_peserta as nama_wakil',
+                'p1.tingkatan as tingkatan_ketua',
+                'p2.tingkatan as tingkatan_wakil',
+                'k1.nama_kelas as kelas_ketua',
+                'k2.nama_kelas as kelas_wakil'
+            )
+            ->join("peserta as p1", 'p1.id_peserta', '=', 'k.id_ketua')
+            ->join('peserta as p2', 'p2.id_peserta', '=', 'k.id_wakil')
+            ->join('kelas as k1', 'k1.id_kelas', '=', 'p1.id_kelas')
+            ->join('kelas as k2', 'k2.id_kelas', '=', 'p2.id_kelas')
+            ->where("p1.status", 1)
+            ->where("p2.status", 1)
+            ->where("k1.status", 1)
+            ->where("k2.status", 1)
+            ->orderBy("k.id_kandidat", 'ASC')
+            ->get();
+
+        $dataToView = [
+            'kandidats' => $sql_kandidat,
+            'status_vote' => 0,
+        ];
+
+        if ($sql_check) {
+            $dataToView['status_vote'] = 1;
+        }
+
+        return view("peserta.vote", $dataToView);
     }
 }

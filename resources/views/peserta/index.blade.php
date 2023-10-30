@@ -140,7 +140,6 @@
         </div>
     </div>
 
-
     <!-- Modal Detail Barcode -->
     <div class="modal fade" id="modalQr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -12,9 +12,10 @@
 @section('content')
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
 
-    <div class="card">
-        <div class="card-body d-flex justify-content-end">
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-end">
             <a href="/kandidat" class="btn btn-primary">
                 <i class="ri-arrow-left-line"></i>
                 Kembali
@@ -33,10 +34,13 @@
                         <div class="form-group">
                             <label for="#">Ketua</label>
                             <select name="ketua" id="ketua" class="form-control">
-                                <option value="{{ $kandidat->id_ketua }}" selected>{{ $kandidat->nama_ketua }}</option>
-                                <option value="{{ $kandidat->id_wakil }}">{{ $kandidat->nama_wakil }}</option>
+                                <option value="{{ $kandidat->id_ketua }}" @selected(old('ketua', $kandidat->id_ketua) == $kandidat->id_ketua)>
+                                    {{ $kandidat->nama_ketua }}</option>
+                                <option value="{{ $kandidat->id_wakil }}" @selected(old('ketua') == $kandidat->id_wakil)>
+                                    {{ $kandidat->nama_wakil }}</option>
                                 @foreach ($pesertas as $peserta)
-                                    <option value="{{ $peserta->id_peserta }}">{{ $peserta->nama_peserta }}</option>
+                                    <option value="{{ $peserta->id_peserta }}" @selected(old('ketua') == $peserta->id_peserta)>
+                                        {{ $peserta->nama_peserta }}</option>
                                 @endforeach
                             </select>
                             @error('ketua')
@@ -48,10 +52,13 @@
                         <div class="form-group">
                             <label for="#">Wakil</label>
                             <select name="wakil" id="wakil" class="form-control">
-                                <option value="{{ $kandidat->id_ketua }}">{{ $kandidat->nama_ketua }}</option>
-                                <option value="{{ $kandidat->id_wakil }}" selected>{{ $kandidat->nama_wakil }}</option>
+                                <option value="{{ $kandidat->id_ketua }}" @selected(old('wakil') == $kandidat->id_wakil)>
+                                    {{ $kandidat->nama_ketua }}</option>
+                                <option value="{{ $kandidat->id_wakil }}" @selected(old('wakil', $kandidat->id_wakil) == $kandidat->id_wakil)>
+                                    {{ $kandidat->nama_wakil }}</option>
                                 @foreach ($pesertas as $peserta)
-                                    <option value="{{ $peserta->id_peserta }}">{{ $peserta->nama_peserta }}</option>
+                                    <option value="{{ $peserta->id_peserta }}" @selected(old('wakil') == $peserta->id_peserta)>
+                                        {{ $peserta->nama_peserta }}</option>
                                 @endforeach
                             </select>
                             @error('wakil')
@@ -121,6 +128,24 @@
 
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <script>
+        @if (session()->has('ketuaWakilSama'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Nama Ketua dan Wakil tidak boleh sama !',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+    </script>
 
     <script>
         bsCustomFileInput.init();

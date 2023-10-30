@@ -138,6 +138,10 @@
     color: var(--white) !important;
 }
 
+.badge-info {
+    background: var(--info) !important;
+}
+
 .page-item.active .page-link {
     background: var(--primary) !important;
     border-color: var(--primary) !important;

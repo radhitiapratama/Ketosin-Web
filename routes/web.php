@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get("peserta/edit/{id_peserta}", [PesertaController::class, 'edit']);
     Route::post("peserta/update", [PesertaController::class, 'update']);
     Route::post("peserta/import", [PesertaController::class, 'import']);
+    Route::get("peserta/vote/{peserta_id}", [PesertaController::class, 'vote']);
 
     Route::get("batas-waktu", [WaktuController::class, 'index']);
     Route::get("batas-waktu/add", [WaktuController::class, 'add']);

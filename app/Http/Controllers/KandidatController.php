@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\CssSelector\Node\FunctionNode;
 
 class KandidatController extends Controller
@@ -251,5 +252,45 @@ class KandidatController extends Controller
         if ($tingkatan == 3) {
             return "XII";
         }
+    }
+
+    public function ajax_detail(Request $request)
+    {
+        $id_kandidat = $request->id_kandidat;
+
+        $sql_kandidat = DB::table("kandidat as kd")
+            ->join('peserta as p1', 'p1.id_peserta', '=', 'kd.id_ketua')
+            ->join('kelas as k1', 'k1.id_kelas', '=', 'p1.id_kelas')
+            ->join('peserta as p2', 'p2.id_peserta', '=', 'kd.id_wakil')
+            ->join('kelas as k2', 'k2.id_kelas', '=', 'p2.id_kelas')
+            ->where("kd.id_kandidat", $id_kandidat)
+            ->select('kd.*', 'p1.nama_peserta as nama_ketua', 'p1.tingkatan as tingkatan_ketua', 'k1.nama_kelas as kelas_ketua', 'p2.nama_peserta as nama_wakil', 'p2.tingkatan as tingkatan_wakil', 'k2.nama_kelas as kelas_wakil')
+            ->first();
+
+        if (empty($sql_kandidat)) {
+            return response()->json([
+                'status' => false,
+                'message' => "ID Kandidat tidak di temukan",
+            ]);
+        }
+
+        $misiArr = [];
+        $misi = explode("|", $sql_kandidat->misi);
+
+        if (count($misi) > 0) {
+            foreach ($misi as $row) {
+                array_push($misiArr, $row);
+            }
+        } else {
+            array_push($misiArr, $misi[0]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => "success",
+            'slogan' => $sql_kandidat->slogan,
+            'visi' => $sql_kandidat->visi,
+            'misi' => $misi
+        ]);
     }
 }

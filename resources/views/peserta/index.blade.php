@@ -248,6 +248,21 @@
                 toast: true
             });
         @endif
+
+        @if (session()->has('successVote'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                iconColor: "#FFF",
+                title: 'Pilihan anda berhasil di rekam',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
     </script>
 
     <script>

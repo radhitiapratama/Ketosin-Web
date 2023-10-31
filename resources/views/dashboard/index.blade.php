@@ -93,6 +93,9 @@
                     votes.push(val.total_suara);
                 });
 
+                console.log(votes);
+                console.log(labels);
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {

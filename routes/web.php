@@ -48,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post("peserta/update", [PesertaController::class, 'update']);
     Route::post("peserta/import", [PesertaController::class, 'import']);
     Route::get("peserta/vote/{peserta_id}", [PesertaController::class, 'vote']);
+    Route::post("peserta/doVote", [PesertaController::class, 'doVote']);
+
 
     Route::get("batas-waktu", [WaktuController::class, 'index']);
     Route::get("batas-waktu/add", [WaktuController::class, 'add']);
@@ -61,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get("kandidat/edit/{id_kandidat}", [KandidatController::class, 'edit']);
     Route::post("kandidat/update", [KandidatController::class, 'update']);
     Route::get("kandidat/detail/{id_kandidat}", [KandidatController::class, 'detail']);
+    Route::post("kandidat/detail", [KandidatController::class, 'ajax_detail']);
 
     Route::match(['get', 'post'], "pemilihan", [PemilihanController::class, 'index']);
 

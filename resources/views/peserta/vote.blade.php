@@ -8,6 +8,31 @@
 @endsection
 
 @section('content')
+    <style>
+        input[type=radio] {
+            transform: scale(1.5);
+            accent-color: #8FBD56;
+            box-shadow: none;
+        }
+
+        .detail-kandidat {
+            border: none;
+            background: transparent;
+            text-decoration: none;
+            position: relative;
+            padding: 0;
+        }
+
+        .detail-kandidat::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #8FBD56;
+            right: 0;
+            bottom: -4px;
+        }
+    </style>
     <div class="row mb-3">
         <div class="col-12 d-flex justify-content-end">
             <a href="/peserta" class="btn btn-primary">
@@ -16,52 +41,158 @@
             </a>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 d-flex flex-wrap gap-20">
-            @foreach ($kandidats as $kandidat)
-                <div class="card" style="width: 18rem; overflow: hidden;">
-                    <div>
-                        @if ($kandidat->foto)
-                            <img src="{{ asset('/storage/img-uploads/' . $kandidat->foto) }}" class="card-img-top"
-                                alt="..." style="width: 100%;height: 100%; object-fit: cover">
-                        @else
-                            <img src="{{ asset('main-assets/imgs/default.jpg') }}" class="card-img-top" alt="..."
-                                style="width: 100%;height: 100%; object-fit: cover">
-                        @endif
+    <div class="card">
+        <div class="card-body">
+            <form action="/peserta/doVote" method="post">
+                @csrf
+                <input type="hidden" name="id_peserta" value="{{ $id_peserta }}">
+                <div class="row mb-3">
+                    <div class="col-12 d-flex justify-content-center flex-wrap gap-20">
+                        @foreach ($kandidats as $kandidat)
+                            <div class="card" style="width: 18rem; overflow: hidden;">
+                                <div>
+                                    @if ($kandidat->foto)
+                                        <img src="{{ asset('/storage/img-uploads/' . $kandidat->foto) }}"
+                                            class="card-img-top" alt="..."
+                                            style="width: 100%;height: 100%; object-fit: cover">
+                                    @else
+                                        <img src="{{ asset('main-assets/imgs/default.jpg') }}" class="card-img-top"
+                                            alt="..." style="width: 100%;height: 100%; object-fit: cover">
+                                    @endif
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-12 d-flex justify-content-between gap-20">
+                                            @if ($isKandidat == 1 || $status_vote == 1)
+                                                <input type="radio" name="id_kandidat"
+                                                    value="{{ $kandidat->id_kandidat }}" id="id_kandidat" disabled required>
+                                            @else
+                                                <input type="radio" name="id_kandidat"
+                                                    value="{{ $kandidat->id_kandidat }}" id="id_kandidat" required>
+                                            @endif
+                                            <div class="d-flex" style="gap: 20px">
+                                                <button type="button" class="btn-detail-kandidat detail-kandidat"
+                                                    data-toggle="modal" data-id-kandidat="{{ $kandidat->id_kandidat }}"
+                                                    data-target="#detailKandidat">
+                                                    Detail Kandidat
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style="margin: 0;">Ketua</p>
+                                    <p class="text-gray">{{ $kandidat->nama_ketua }}</p>
+                                    <p style="margin: 0">Wakil</p>
+                                    <p class="text-gray">{{ $kandidat->nama_wakil }}</p>
+                                    <p class="text-gray">" {{ $kandidat->slogan }} "</p>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="card-body">
-                        <h6>{{ $kandidat->nama_ketua }}</h6>
-                        <p class="text-gray">
-                            @if ($kandidat->tingkatan_ketua == 1)
-                                X
-                            @endif
-                            @if ($kandidat->tingkatan_ketua == 2)
-                                XI
-                            @endif
-                            @if ($kandidat->tingkatan_ketua == 3)
-                                XII
-                            @endif
-                            {{ $kandidat->kelas_ketua }}
-                        </p>
-                        <h6>{{ $kandidat->nama_wakil }}</h6>
-                        <p class="text-gray">
-                            @if ($kandidat->tingkatan_wakil == 1)
-                                X
-                            @endif
-                            @if ($kandidat->tingkatan_wakil == 2)
-                                XI
-                            @endif
-                            @if ($kandidat->tingkatan_wakil == 3)
-                                XII
-                            @endif {{ $kandidat->kelas_wakil }}
-                        </p>
-                        <div class="d-flex" style="gap: 20px">
-                            <a href="/kandidat/detail/{{ $kandidat->id_kandidat }}" class="btn btn-primary">Detail <i
-                                    class="ri-information-line"></i> </a>
+                </div>
+
+                @if ($isKandidat == 1 || $status_vote == 1)
+                    <button type="button" class="btn btn-primary m-auto pointer-none" disabled>Vote</button>
+                @else
+                    <button type="submit" class="btn btn-primary m-auto">Vote</button>
+                @endif
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="detailKandidat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card card-primary card-tabs">
+                        <div class="card-header p-0 pt-1">
+                            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill"
+                                        href="#tab-slogan" role="tab" aria-controls="custom-tabs-one-home"
+                                        aria-selected="true">Slogan</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#tab-visi"
+                                        role="tab" aria-controls="custom-tabs-one-profile"
+                                        aria-selected="false">Visi</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill"
+                                        href="#tab-misi" role="tab" aria-controls="custom-tabs-one-messages"
+                                        aria-selected="false">Misi</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-one-tabContent">
+                                <div class="tab-pane fade active show" id="tab-slogan" role="tabpanel"
+                                    aria-labelledby="custom-tabs-one-home-tab">
+                                    <div class="tab-slogan-wrapper"></div>
+                                </div>
+                                <div class="tab-pane fade" id="tab-visi" role="tabpanel"
+                                    aria-labelledby="custom-tabs-one-profile-tab">
+                                    <div class="tab-visi-wrapper"></div>
+                                </div>
+                                <div class="tab-pane fade" id="tab-misi" role="tabpanel"
+                                    aria-labelledby="custom-tabs-one-messages-tab">
+                                    <div class="tab-misi-wrapper"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Tutup</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
+
+            </div>
         </div>
     </div>
+
+    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <script>
+        const csrf = $('meta[name="csrf-token"]').attr('content');
+
+        $(document).on("click", ".btn-detail-kandidat", function() {
+            let id_kandidat = $(this).data("id-kandidat");
+            console.log(id_kandidat);
+            $.ajax({
+                type: "POST",
+                url: "{{ url('kandidat/detail') }}",
+                headers: {
+                    "X-CSRF-TOKEN": csrf,
+                },
+                data: {
+                    id_kandidat: id_kandidat,
+                },
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    let misi = '';
+
+                    $(".tab-misi-wrapper").html("");
+
+                    for (let i = 0; i < response.misi.length; i++) {
+                        $(".tab-misi-wrapper").append(`<p>${response.misi[i]}</p>`);
+                    }
+
+                    $(".tab-slogan-wrapper").html(response.slogan);
+                    $(".tab-visi-wrapper").html(response.visi);
+                }
+            });
+        });
+    </script>
+
 @endsection

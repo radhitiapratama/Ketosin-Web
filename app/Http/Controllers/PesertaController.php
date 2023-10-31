@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\PesertaImport;
-use App\Models\Kandidat;
+use Carbon\Carbon;
 use App\Models\Kelas;
 use App\Models\Peserta;
+use App\Models\Kandidat;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Imports\PesertaImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Psy\CodeCleaner\FunctionReturnInWriteContextPass;
 
 class PesertaController extends Controller
 {
@@ -408,6 +410,11 @@ class PesertaController extends Controller
             ->where("id_peserta", $id_peserta)
             ->first();
 
+        $sql_checkKandidat = DB::table("kandidat")
+            ->where("id_ketua", $id_peserta)
+            ->orWhere("id_wakil", $id_peserta)
+            ->first();
+
         $sql_kandidat = DB::table("kandidat as k")
             ->select(
                 'k.*',
@@ -432,12 +439,83 @@ class PesertaController extends Controller
         $dataToView = [
             'kandidats' => $sql_kandidat,
             'status_vote' => 0,
+            'isKandidat' => 0,
+            'id_peserta' => $id_peserta,
         ];
 
         if ($sql_check) {
             $dataToView['status_vote'] = 1;
         }
 
+        if ($sql_checkKandidat) {
+            $dataToView['isKandidat'] = 1;
+        }
+
+        // dd($dataToView);
+
         return view("peserta.vote", $dataToView);
+    }
+
+    public function doVote(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_kandidat' => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $id_kandidat = $request->id_kandidat;
+        $id_peserta = $request->id_peserta;
+        $longtitude = null;
+        $latitude = null;
+
+        $sql_checkPeserta = DB::table("pemilihan")
+            ->where("id_peserta", $id_peserta)
+            ->first();
+
+        $sql_waktu = DB::table('waktu')
+            ->where("status", 1)
+            ->first();
+
+        //check peserta sudah pilih atau belum
+        if ($sql_checkPeserta) {
+            return redirect()->back()->withInput()->with("sudahVote", "sudahVote");
+        }
+
+        // cek apakah ada batas waktu
+        if (!$sql_waktu) {
+            return redirect()->back()->withInput()->with("batasWaktuNotFound", 'batasWaktuNotFound');
+        }
+
+        $waktuSaatIni = Carbon::now();
+
+        // cek apabila waktu kurang
+        if ($waktuSaatIni <= $sql_waktu->start) {
+            return redirect()->back()->withInput()->with("belumDiMulai", "belumDiMulai");
+        }
+
+        // cek apabila waktu lebih
+        if ($waktuSaatIni >= $sql_waktu->finish) {
+            return redirect()->back()->withInput()->with("sudahSelesai", "sudahSelesai");
+        }
+
+        //lolos
+        if ($waktuSaatIni >= $sql_waktu->start && $waktuSaatIni <= $sql_waktu->finish) {
+            DB::table('pemilihan')
+                ->insert([
+                    'id_peserta' => $id_peserta,
+                    'id_kandidat' => $id_kandidat,
+                    'waktu' => Carbon::now(),
+                    'longtitude' => $longtitude,
+                    'latitude' => $latitude,
+                    'status' => 1,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+
+            return redirect('peserta')->with("successVote", 'successVote');
+        }
     }
 }

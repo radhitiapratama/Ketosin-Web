@@ -33,6 +33,9 @@
             bottom: -4px;
         }
     </style>
+
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
+
     <div class="row mb-3">
         <div class="col-12 d-flex justify-content-end">
             <a href="/peserta" class="btn btn-primary">
@@ -162,6 +165,53 @@
     </div>
 
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <script>
+        @if (session()->has('batasWaktuNotFound'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Waktu Pemilihan Belum Ditentukan',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+        @if (session()->has('belumDiMulai'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Pemilihan Belum Dimulai',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+        @if (session()->has('sudahSelesai'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Pemilihan Telah Berakhir',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+    </script>
+
     <script>
         const csrf = $('meta[name="csrf-token"]').attr('content');
 

@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 29/10/2023 10:47:56
+ Date: 01/11/2023 07:42:54
 */
 
 SET NAMES utf8mb4;
@@ -61,7 +61,7 @@ CREATE TABLE `kandidat`  (
 -- ----------------------------
 -- Records of kandidat
 -- ----------------------------
-INSERT INTO `kandidat` VALUES (1, 1, 2, 'sdsdsd', 'sdsdsd', 'test', 'FAeuMnHh7nbXsbRqCetGSOKxRfakqEU22g8yJciO.png', '2023-10-28 08:26:19', '2023-10-29 09:06:11');
+INSERT INTO `kandidat` VALUES (1, 1, 2, 'Menjadikan OSIS SMKN 1 BONDOWOSO sebagai organisasi yang cekatan dan amanah dalam menampung serta mendukung potensi para siswa dengan berlandaskan Pancasila', '1. Membantu sekolah dalam memperkuat nilai nilai keimanan dan ketaqwaan siswa |\r\n2. Mengeratkan rasa persaudaraan antar pengurus OSIS agar menghasilkan kinerja OSIS yang lebih baik |\r\n3. Mengutamakan musyawarah antar pengurus sebelum mengambil keputusan  |\r\n4. Mengadakan dan mendukung kegiatan-kegiatan positif yang bertujuan untuk meningkatkan kreatifitas siswa |\r\n5. Mengoptimalkan kinerja OSIS dalam memantau ekstrakulikuler yang ada di sekolah\r\n6. Melaksanakan program kerja yang sudah tersusun sesuai rencana', 'BERSAMA KAMI MENJALIN KOMITMEN MENUJU OSIS YANG LEBIH BAIK', 'FAeuMnHh7nbXsbRqCetGSOKxRfakqEU22g8yJciO.png', '2023-10-28 08:26:19', '2023-11-01 06:48:25');
 INSERT INTO `kandidat` VALUES (2, 5, 6, 'Mewujudkan keimanan dan ketaqwaan siswa/i SMKN 1 Bondowoso serta menjadikan OSIS sebagai perantara bagi siswa untuk mengembakan potensi diri yang ada, dan menjadikan OSIS sebagai organisasi yang aktif, inovatif, serta kreatif, dengan berlandaskan ketuhanan yang maha esa serta berasaskan pancasila.', '1. Meningkatkan keimanan serta pengetahuan siswa dalam bidang keagamaan dengan kegiatan yang berbasis agama. |\r\n2. Menampung seluruh aspirasi Siswa/i dan membuka ruang diskusi antar OSIS dan Siswa/i SMKN 1 Bondowoso. |\r\n3. Mengoptimalkan peran OSIS sebagai media komunikasi antar Siswa/i dan guru untuk menyalurkan bakat dan minatnya. |\r\n4. Membuat program baru yang lebih unggul melalui berbagai kegiatan ektrakulikuler. |\r\n5. Melanjutkan dan meningkatkan program kerja OSIS periode sebelumnya.', 'Build success with a change with SMAKENSA Student Council', 'EPcesTHwjXStjGpwGHwsrMrN6B0zUqVc810MUVYe.png', '2023-10-28 08:26:35', '2023-10-29 09:06:05');
 
 -- ----------------------------
@@ -114,7 +114,7 @@ CREATE TABLE `migrations`  (
   `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of migrations
@@ -194,7 +194,7 @@ CREATE TABLE `personal_access_tokens`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `personal_access_tokens_token_unique`(`token`) USING BTREE,
   INDEX `personal_access_tokens_tokenable_type_tokenable_id_index`(`tokenable_type`, `tokenable_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of personal_access_tokens
@@ -1488,7 +1488,7 @@ CREATE TABLE `waktu`  (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_waktu`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of waktu

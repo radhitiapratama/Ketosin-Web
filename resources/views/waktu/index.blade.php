@@ -35,8 +35,8 @@
                     @foreach ($waktus as $waktu)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $waktu->start }}</td>
-                            <td>{{ $waktu->finish }}</td>
+                            <td>{{ date('d-m-Y H:i:s', strtotime($waktu->start)) }}</td>
+                            <td>{{ date('d-m-Y H:i:s', strtotime($waktu->finish)) }}</td>
                             <td class="text-center">
                                 @if ($waktu->status == 1)
                                     <span class="badge badge-success p-2">Aktif</span>

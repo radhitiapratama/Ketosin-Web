@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="/login-assets/css/util.css">
     <link rel="stylesheet" type="text/css" href="/login-assets/css/main.css">
     <!--===============================================================================================-->
+    <link rel="stylesheet" href="{{ asset('main-assets/css/app.css') }}">
 </head>
 
 <body>
@@ -93,6 +94,26 @@
     <script src="/login-assets/vendor/countdowntime/countdowntime.js"></script>
     <!--===============================================================================================-->
     <script src="/login-assets/js/main.js"></script>
+
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
+
+    <script>
+        @if (session()->has('loginFailed'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Nama / Password salah !',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+    </script>
 
 </body>
 

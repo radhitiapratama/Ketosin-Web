@@ -151,8 +151,10 @@ class QrCodeController extends Controller
         }
 
         if ($tipe == 2) {
-            $sql_peserta = Peserta::where("tipe", 2)
+            $sql_peserta = DB::table("peserta")->select("nama_peserta", "qr_code")
+                ->where("tipe", 2)
                 ->where("status", 1)
+                ->where("qr_code", "!=", null)
                 ->orderBy("id_peserta", "ASC")
                 ->get();
 
@@ -165,8 +167,10 @@ class QrCodeController extends Controller
         }
 
         if ($tipe == 3) {
-            $sql_peserta = Peserta::where("tipe", 3)
+            $sql_peserta = DB::table("peserta")->select("nama_peserta", "qr_code")
+                ->where("tipe", 3)
                 ->where("status", 1)
+                ->where("qr_code", "!=", null)
                 ->orderBy("id_peserta", "ASC")
                 ->get();
 

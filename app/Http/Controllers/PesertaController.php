@@ -374,7 +374,7 @@ class PesertaController extends Controller
             return "Guru";
         }
 
-        if ($tipe == 1) {
+        if ($tipe == 3) {
             return "Karyawan";
         }
 

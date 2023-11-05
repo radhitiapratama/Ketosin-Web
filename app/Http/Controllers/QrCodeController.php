@@ -107,6 +107,8 @@ class QrCodeController extends Controller
     public function cetak(Request $request)
     {
         $tipe = $request->tipe_cetak;
+        $page = $request->page;
+        $offset = 0;
 
         if ($tipe == "") {
             return redirect("qr-code");
@@ -151,11 +153,21 @@ class QrCodeController extends Controller
         }
 
         if ($tipe == 2) {
+            if (!$page) {
+                return redirect("qr-code");
+            }
+
+            if ($page != 1) {
+                $offset = ($page * 25) - 25;
+            }
+
             $sql_peserta = DB::table("peserta")->select("nama_peserta", "qr_code")
                 ->where("tipe", 2)
                 ->where("status", 1)
                 ->where("qr_code", "!=", null)
                 ->orderBy("id_peserta", "ASC")
+                ->limit(25)
+                ->offset($offset)
                 ->get();
 
             $fileName = "Barcode-Guru";
@@ -167,11 +179,21 @@ class QrCodeController extends Controller
         }
 
         if ($tipe == 3) {
+            if (!$page) {
+                return redirect("qr-code");
+            }
+
+            if ($page != 1) {
+                $offset = ($page * 25) - 25;
+            }
+
             $sql_peserta = DB::table("peserta")->select("nama_peserta", "qr_code")
                 ->where("tipe", 3)
                 ->where("status", 1)
                 ->where("qr_code", "!=", null)
                 ->orderBy("id_peserta", "ASC")
+                ->limit(25)
+                ->offset($offset)
                 ->get();
 
             $fileName = "Barcode-Karyawan";

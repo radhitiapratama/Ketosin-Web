@@ -99,7 +99,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Import -->
     <div class="modal fade" id="importPeserta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -300,6 +300,18 @@
         </div>
         `;
 
+        const cetak_form_guru = `
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="#">Page</label>
+                    <input type="text" class="form-control" name="page"
+                        onkeypress="return onlyNum(event)" placeholder="Contoh : 1">
+                </div>
+            </div>
+        </div>
+        `;
+
         bsCustomFileInput.init();
 
         function showDataTable() {
@@ -376,6 +388,13 @@
             Swal.close();
         }
 
+        function onlyNum(evt) {
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+
 
         showDataTable();
 
@@ -424,16 +443,13 @@
                 return;
             }
 
-            if (tipe == 2) {
+            if (tipe == 2 || tipe == 3) {
                 $(".qr-cetak-form-wrapper").html("");
+                $(".qr-cetak-form-wrapper").html(cetak_form_guru);
                 return;
             }
 
-            if (tipe == 3) {
-                $(".qr-cetak-form-wrapper").html("");
-                return;
-            }
-
+            $(".qr-cetak-form-wrapper").html("");
         });
     </script>
 @endsection

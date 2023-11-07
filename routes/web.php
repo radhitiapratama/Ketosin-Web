@@ -24,6 +24,13 @@ use Maatwebsite\Excel\Row;
 |
 */
 
+Route::get("symlink",function(){
+    $targetFolder = $_SERVER['DOCUMENT_ROOT'] . "/storage/app/public/";
+    $linkFolder = $_SERVER['DOCUMENT_ROOT'] . '/public/storage/img-uploads';
+    symlink($targetFolder,$linkFolder);
+    echo "symlink created";
+});
+
 Route::middleware(['guest'])->group(function () {
     Route::get("/", [AuthController::class, 'index'])->name("login");
     Route::post("login", [AuthController::class, 'login']);

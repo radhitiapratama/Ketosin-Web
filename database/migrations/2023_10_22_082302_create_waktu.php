@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('waktu', function (Blueprint $table) {
             $table->id("id_waktu");
-            $table->timestamp("start");
-            $table->timestamp("finish");
+            $table->timestamp("start")->nullable();
+            $table->timestamp("finish")->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
         });

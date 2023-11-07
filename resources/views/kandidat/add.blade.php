@@ -63,7 +63,7 @@
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="exampleInputFile"
-                                        accept=".png,.jpg,.jpeg" name="foto" value="{{ old('foto') }}">
+                                        accept=".png,.jpg,.jpeg" name="foto" value="{{ old('foto') }}" required>
                                     <label class="custom-file-label" for="exampleInputFile">Pilih Foto</label>
                                 </div>
                                 <div class="input-group-append">

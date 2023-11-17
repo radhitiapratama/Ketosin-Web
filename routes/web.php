@@ -9,9 +9,7 @@ use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\TPSController;
 use App\Http\Controllers\WaktuController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\Excel\Row;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +22,12 @@ use Maatwebsite\Excel\Row;
 |
 */
 
-Route::get("symlink", function () {
-    $targetFolder = $_SERVER['DOCUMENT_ROOT'] . "/storage/app/public/";
-    $linkFolder = $_SERVER['DOCUMENT_ROOT'] . '/public/storage/img-uploads';
-    symlink($targetFolder, $linkFolder);
-    echo "symlink created";
-});
+// Route::get("symlink", function () {
+//     $targetFolder = $_SERVER['DOCUMENT_ROOT'] . "/storage/app/public/";
+//     $linkFolder = $_SERVER['DOCUMENT_ROOT'] . '/public/storage/img-uploads';
+//     symlink($targetFolder, $linkFolder);
+//     echo "symlink created";
+// });
 
 Route::middleware(['guest'])->group(function () {
     Route::get("/", [AuthController::class, 'index'])->name("login");

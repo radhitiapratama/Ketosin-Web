@@ -13,6 +13,15 @@
             font-size: 24px;
         }
     </style>
+    <div class="card">
+        <div class="card-body">
+            <a href="/token-tps/cetak" class="btn btn-primary" target="_blank">
+                <i class="ri-printer-line"></i>
+                Cetak Token
+            </a>
+        </div>
+    </div>
+
     <div class="row">
         @foreach ($tokens as $key => $value)
             <div class="col-md-4 col-12">

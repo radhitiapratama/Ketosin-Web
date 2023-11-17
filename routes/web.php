@@ -24,10 +24,10 @@ use Maatwebsite\Excel\Row;
 |
 */
 
-Route::get("symlink",function(){
+Route::get("symlink", function () {
     $targetFolder = $_SERVER['DOCUMENT_ROOT'] . "/storage/app/public/";
     $linkFolder = $_SERVER['DOCUMENT_ROOT'] . '/public/storage/img-uploads';
-    symlink($targetFolder,$linkFolder);
+    symlink($targetFolder, $linkFolder);
     echo "symlink created";
 });
 
@@ -80,4 +80,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post("qr-code/cetak-qr", [QrCodeController::class, 'cetak']);
 
     Route::get("token-tps", [TPSController::class, 'index']);
+    Route::get("token-tps/cetak", [TPSController::class, 'cetak']);
 });

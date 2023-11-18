@@ -4,7 +4,7 @@
 @section('content')
     <style>
         .chart-wrapper {
-            height: 60vh;
+            height: 70vh;
         }
     </style>
 
@@ -97,14 +97,14 @@
                 console.log(labels);
 
                 new Chart(ctx, {
-                    type: 'bar',
+                    type: 'doughnut',
                     data: {
-                        labels: labels,
+                        labels: ['Paslon 1', 'Paslon 2'],
                         datasets: [{
                             label: 'Total Suara',
-                            data: votes,
+                            data: [200, 100],
                             borderWidth: 1,
-                            backgroundColor: "#59ADEC"
+                            backgroundColor: ["#E984B1", "#59ADEC"]
                         }]
                     },
                     options: {

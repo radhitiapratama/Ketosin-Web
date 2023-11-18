@@ -32,6 +32,12 @@
             right: 0;
             bottom: -4px;
         }
+
+        .text-no-kandidat {
+            padding: 0;
+            margin: 0;
+            font-size: 18px;
+        }
     </style>
 
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
@@ -46,59 +52,64 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <form action="/peserta/doVote" method="post">
-                @csrf
-                <input type="hidden" name="id_peserta" value="{{ $id_peserta }}">
-                <div class="row mb-3">
-                    <div class="col-12 d-flex justify-content-center flex-wrap gap-20">
-                        @foreach ($kandidats as $kandidat)
-                            <div class="card" style="width: 18rem; overflow: hidden;">
-                                <div>
-                                    @if ($kandidat->foto)
-                                        <img src="{{ asset('/storage/img-uploads/' . $kandidat->foto) }}"
-                                            class="card-img-top" alt="..."
-                                            style="width: 100%;height: 100%; object-fit: cover">
-                                    @else
-                                        <img src="{{ asset('main-assets/imgs/default.jpg') }}" class="card-img-top"
-                                            alt="..." style="width: 100%;height: 100%; object-fit: cover">
-                                    @endif
-                                </div>
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-12 d-flex justify-content-between gap-20">
-                                            @if ($isKandidat == 1 || $status_vote == 1)
-                                                <input type="radio" name="id_kandidat"
-                                                    value="{{ $kandidat->id_kandidat }}" id="id_kandidat" disabled required>
-                                            @else
-                                                <input type="radio" name="id_kandidat"
-                                                    value="{{ $kandidat->id_kandidat }}" id="id_kandidat" required>
-                                            @endif
-                                            <div class="d-flex" style="gap: 20px">
-                                                <button type="button" class="btn-detail-kandidat detail-kandidat"
-                                                    data-toggle="modal" data-id-kandidat="{{ $kandidat->id_kandidat }}"
-                                                    data-target="#detailKandidat">
-                                                    Detail Kandidat
-                                                </button>
+            @if (count($kandidats) > 0)
+                <form action="/peserta/doVote" method="post">
+                    @csrf
+                    <input type="hidden" name="id_peserta" value="{{ $id_peserta }}">
+                    <div class="row mb-3">
+                        <div class="col-12 d-flex justify-content-center flex-wrap gap-20">
+                            @foreach ($kandidats as $kandidat)
+                                <div class="card" style="width: 18rem; overflow: hidden;">
+                                    <div>
+                                        @if ($kandidat->foto)
+                                            <img src="{{ asset('uploads/' . $kandidat->foto) }}" class="card-img-top"
+                                                alt="..." style="width: 100%;height: 100%; object-fit: cover">
+                                        @else
+                                            <img src="{{ asset('main-assets/imgs/default.jpg') }}" class="card-img-top"
+                                                alt="..." style="width: 100%;height: 100%; object-fit: cover">
+                                        @endif
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-12 d-flex justify-content-between gap-20">
+                                                @if ($isKandidat == 1 || $status_vote == 1)
+                                                    <input type="radio" name="id_kandidat"
+                                                        value="{{ $kandidat->id_kandidat }}" id="id_kandidat" disabled
+                                                        required>
+                                                @else
+                                                    <input type="radio" name="id_kandidat"
+                                                        value="{{ $kandidat->id_kandidat }}" id="id_kandidat" required>
+                                                @endif
+                                                <div class="d-flex" style="gap: 20px">
+                                                    <button type="button" class="btn-detail-kandidat detail-kandidat"
+                                                        data-toggle="modal" data-id-kandidat="{{ $kandidat->id_kandidat }}"
+                                                        data-target="#detailKandidat">
+                                                        Detail Kandidat
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
+                                        <p style="margin: 0;">Ketua</p>
+                                        <p class="text-gray">{{ $kandidat->nama_ketua }}</p>
+                                        <p style="margin: 0">Wakil</p>
+                                        <p class="text-gray">{{ $kandidat->nama_wakil }}</p>
+                                        <p class="text-gray">" {{ $kandidat->slogan }} "</p>
                                     </div>
-                                    <p style="margin: 0;">Ketua</p>
-                                    <p class="text-gray">{{ $kandidat->nama_ketua }}</p>
-                                    <p style="margin: 0">Wakil</p>
-                                    <p class="text-gray">{{ $kandidat->nama_wakil }}</p>
-                                    <p class="text-gray">" {{ $kandidat->slogan }} "</p>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
 
-                @if ($isKandidat == 1 || $status_vote == 1)
-                    <button type="button" class="btn btn-primary m-auto pointer-none" disabled>Vote</button>
-                @else
-                    <button type="submit" class="btn btn-primary m-auto">Vote</button>
-                @endif
-            </form>
+                    @if ($isKandidat == 1 || $status_vote == 1)
+                        <button type="button" class="btn btn-primary m-auto pointer-none" disabled>Vote</button>
+                    @else
+                        <button type="submit" class="btn btn-primary m-auto">Vote</button>
+                    @endif
+                </form>
+            @else
+                <p class="text-no-kandidat text-danger">Kandidat belum ada</p>
+            @endif
+
         </div>
     </div>
 

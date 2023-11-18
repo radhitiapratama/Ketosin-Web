@@ -99,10 +99,10 @@
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Paslon 1', 'Paslon 2'],
+                        labels: labels,
                         datasets: [{
                             label: 'Total Suara',
-                            data: [200, 100],
+                            data: votes,
                             borderWidth: 1,
                             backgroundColor: ["#E984B1", "#59ADEC"]
                         }]

@@ -96,7 +96,8 @@ class KandidatController extends Controller
         ];
 
         Kandidat::create($dataUpdate);
-        $request->file("foto")->storeAs("public/img-uploads", $fileDB);
+        // $request->file("foto")->storeAs("public/uploads", $fileDB);
+        $request->file("foto")->move(public_path("uploads"), $fileDB);
 
         return redirect("kandidat")->with("successAdd", "successAdd");
     }
@@ -185,9 +186,11 @@ class KandidatController extends Controller
         }
 
         if (!empty($dataUpdate)) {
-            if ($fileDB != null) {
-                $request->file("foto")->storeAs("public/img-uploads", $fileDB);
-                Storage::delete("public/img-uploads/" . $request->old_foto);
+            if ($fileDB) {
+                $request->file("foto")->move(public_path("uploads"), $fileDB);
+                if (file_exists(public_path('uploads\\' . $request->old_foto . ''))) {
+                    File::delete(public_path('uploads\\' . $request->old_foto . ''));
+                }
             }
 
             Kandidat::where("id_kandidat", $request->id_kandidat)

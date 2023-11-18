@@ -23,8 +23,8 @@
                 <div class="card" style="width: 18rem; overflow: hidden;">
                     <div>
                         @if ($kandidat->foto)
-                            <img src="{{ asset('/storage/img-uploads/' . $kandidat->foto) }}" class="card-img-top"
-                                alt="..." style="width: 100%;height: 100%; object-fit: cover">
+                            <img src="{{ asset('uploads/' . $kandidat->foto) }}" class="card-img-top" alt="..."
+                                style="width: 100%;height: 100%; object-fit: cover">
                         @else
                             <img src="{{ asset('main-assets/imgs/default.jpg') }}" class="card-img-top" alt="..."
                                 style="width: 100%;height: 100%; object-fit: cover">

@@ -28,11 +28,18 @@ class DashboardController extends Controller
         $sql_kelas = Kelas::where("status", 1)->count();
         $sql_pemilihan = Pemilihan::where("status", 1)->count();
 
+        $sql_golput = DB::table('peserta as ps')
+            ->leftJoin("pemilihan as pm", 'pm.id_peserta', '=', 'ps.id_peserta')
+            ->where("ps.status", 1)
+            ->where("pm.id_pemilihan", null)
+            ->get()->count();
+
         $dataToView = [
             'kandidat' => $sql_kandidat,
             'peserta' => $sql_peserta,
             'kelas' => $sql_kelas,
             'pemilihan' => $sql_pemilihan,
+            'peserta_golput' => $sql_golput,
         ];
 
         return view("dashboard.index", $dataToView);

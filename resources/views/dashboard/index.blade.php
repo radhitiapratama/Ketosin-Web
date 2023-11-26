@@ -40,7 +40,7 @@
                     <p>Pemilih</p>
                 </div>
                 <div class="icon">
-                    <i class="ri-signal-tower-line"></i>
+                    <i class="ri-checkbox-circle-line"></i>
                 </div>
                 <a href="/pemilihan" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -48,13 +48,13 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-secondary">
                 <div class="inner">
-                    <h3>{{ $kelas }}</h3>
-                    <p>Kelas</p>
+                    <h3>{{ $peserta_golput }}</h3>
+                    <p>Belum Memilih</p>
                 </div>
                 <div class="icon">
-                    <i class="ri-bank-line"></i>
+                    <i class="ri-close-circle-line"></i>
                 </div>
-                <a href="/kelas" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="/pemilihan" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>

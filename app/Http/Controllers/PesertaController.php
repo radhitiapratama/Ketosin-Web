@@ -9,6 +9,7 @@ use App\Models\Kandidat;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\PesertaImport;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Psy\CodeCleaner\FunctionReturnInWriteContextPass;
@@ -478,6 +479,24 @@ class PesertaController extends Controller
         $sql_waktu = DB::table('waktu')
             ->where("status", 1)
             ->first();
+
+        $sql_check_if_kandidat = DB::table("kandidat")
+            ->where("id_ketua", $id_peserta)
+            ->orWhere("id_wakil", $id_peserta)
+            ->first();
+
+        $sql_check_peserta = DB::table("peserta")
+            ->where("id_peserta", $id_peserta)
+            ->where("status", 1)
+            ->first();
+
+        if ($sql_check_if_kandidat) {
+            return redirect()->back()->withInput()->with("isKandidat", "isKandidat");
+        }
+
+        if ($sql_check_peserta) {
+            return redirect()->back()->withInput()->with("pesertaInvalid", "pesertaInvalid");
+        }
 
         //check peserta sudah pilih atau belum
         if ($sql_checkPeserta) {

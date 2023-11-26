@@ -179,6 +179,36 @@
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <script>
+        @if (session()->has('isKandidat'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Kandidat tidak boleh memvote !',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+
+        @if (session()->has('pesertaInvalid'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                iconColor: "#FFF",
+                title: 'Data peserta invalid !',
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timer: 3000,
+                toast: true
+            });
+        @endif
+
         @if (session()->has('batasWaktuNotFound'))
             Swal.fire({
                 position: 'top-end',

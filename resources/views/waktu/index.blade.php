@@ -20,7 +20,7 @@
     </div>
 
     <div class="card">
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="tblWaktu" class="table table-bordered">
                 <thead>
                     <tr>

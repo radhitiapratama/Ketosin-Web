@@ -17,7 +17,7 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-12 d-flex gap-20">
+                <div class="col-12 d-flex flex-wrap gap-20">
                     <a href="/kelas/add" class="btn btn-primary">
                         Tambah Kelas <i class="ri-add-line ml-2"></i></a>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imporKelas">

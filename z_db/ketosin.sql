@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 17/11/2023 20:35:11
+ Date: 26/11/2023 10:29:06
 */
 
 SET NAMES utf8mb4;
@@ -112,7 +112,7 @@ CREATE TABLE `migrations`  (
   `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of migrations
@@ -1595,7 +1595,7 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, 'admin', 'admin@gmail.com', NULL, '$2y$10$wk7iOamZ6MZg5mXN5cjTe.rni32CqQLyssFsM7.FVBsxdxbU4wRye', NULL, '2023-10-25 21:12:12', '2023-10-25 21:12:12');
+INSERT INTO `users` VALUES (1, 'sipokesip', 'sipokesip@gmail.com', NULL, '$2y$10$7aBgRCchQ7OQEWoIBFBNg.hucIOGpInk8lP8Ph5POYQbAqjowFD7m', NULL, '2023-10-25 21:12:12', '2023-10-25 21:12:12');
 
 -- ----------------------------
 -- Table structure for waktu

@@ -77,6 +77,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post("qr-code/cetak-qr", [QrCodeController::class, 'cetak']);
 
-    Route::get("token-tps", [TPSController::class, 'index']);
-    Route::get("token-tps/cetak", [TPSController::class, 'cetak']);
+    // Route::get("token-tps", [TPSController::class, 'index']);
+    // Route::get("token-tps/cetak", [TPSController::class, 'cetak']);
 });

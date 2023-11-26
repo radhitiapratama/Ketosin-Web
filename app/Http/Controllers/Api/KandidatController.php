@@ -58,22 +58,35 @@ class KandidatController extends Controller
             ]);
         }
 
-        $tokens = [
-            'TPS 1' => "TokenTPS1",
-            'TPS 2' => 'TokenTPS2',
-            'TPS 3' => 'TokenTPS3',
-        ];
+        // $tokens = [
+        //     'TPS 1' => "TokenTPS1",
+        //     'TPS 2' => 'TokenTPS2',
+        //     'TPS 3' => 'TokenTPS3',
+        // ];
 
-        if (!in_array($request->qr_tps, $tokens)) {
-            return response()->json([
-                'status' => false,
-                'message' => "QR TPS Tidak Valid",
-            ]);
-        }
+        // if (!in_array($request->qr_tps, $tokens)) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => "QR TPS Tidak Valid",
+        //     ]);
+        // }
 
         $id_kandidat = $request->id_kandidat;
         $longtitude = $request->longtitude;
         $latitude = $request->latitude;
+
+        $sql_check_is_kandidat = DB::table("kandidat")
+            ->where("id_ketua", Auth::user()->id_peserta)
+            ->orWhere("id_wakil", Auth::user()->id_peserta)
+            ->first();
+
+        if (!empty($sql_check_is_kandidat)) {
+            return response()->json([
+                'status' => false,
+                'message' => "Kandidat tidak di izinkan untuk memvote!",
+            ]);
+        }
+
 
         $sql_checkPeserta = DB::table("peserta")
             ->where("id_peserta", Auth::user()->id_peserta)

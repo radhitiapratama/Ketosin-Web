@@ -494,7 +494,7 @@ class PesertaController extends Controller
             return redirect()->back()->withInput()->with("isKandidat", "isKandidat");
         }
 
-        if ($sql_check_peserta) {
+        if (!$sql_check_peserta) {
             return redirect()->back()->withInput()->with("pesertaInvalid", "pesertaInvalid");
         }
 

@@ -48,7 +48,7 @@ class KandidatController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id_kandidat' => "required",
-            'qr_tps' => "required"
+            // 'qr_tps' => "required"
         ]);
 
         if ($validator->fails()) {

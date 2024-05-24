@@ -9,6 +9,8 @@ use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\TPSController;
 use App\Http\Controllers\WaktuController;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 /*

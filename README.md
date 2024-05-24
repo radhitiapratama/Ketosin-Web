@@ -24,3 +24,6 @@ php artisan migrate
 ```
 php artisan serve
 ```
+
+### Info
+- Akun superadmin => username = sipokesip | password = 12345678
